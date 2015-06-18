@@ -35,7 +35,9 @@ public class PlayerController : MonoBehaviour {
 	public Vector3 objectCurrentPosition;
 	public Vector3 objectTargetPosition;
 	public float topSpeed = 500;
-	void OnMouseDrag()
+	
+    
+    void OnMouseDrag()
 	{
 		mouseCurLocation = new Vector3(Input.mousePosition.x, Input.mousePosition.y, gameObjectSreenPoint.z);
 		force = mouseCurLocation - mousePreviousLocation;//Changes the force to be applied
@@ -45,8 +47,9 @@ public class PlayerController : MonoBehaviour {
 			force = force.normalized * topSpeed;
 		}
 		//Debug.Log (CameraController.currentRotation);
-		force = Quaternion.AngleAxis(CameraController.currentRotation, Vector3.up) * force;
-		force.y *= 2;
+		force = Quaternion.AngleAxis(CameraController.currentRotationX, Vector3.up) * force;
+        //force.y *= 2.5f;
+        //force.x *= 2;
 		rb.velocity = force;
 	}
 	

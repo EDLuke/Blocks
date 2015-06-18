@@ -11,12 +11,14 @@ public class CameraController: MonoBehaviour
 	public float minimumX = -360F;
 	public float maximumX = 360F;
 	
-	public float minimumY = -360F;
-	public float maximumY = 360F;
+	public float minimumY = 0F;
+	public float maximumY = 180F;
 	
     float rotationX = 0F;
+    float rotationY = 0F;
 
-	public static float currentRotation;
+	public static float currentRotationX;
+    public static float currentRotationY;
 
 	public Vector2 mousePosStart;
 	public Vector2 mousePosEnd;
@@ -26,27 +28,27 @@ public class CameraController: MonoBehaviour
 	void Update ()
 	{
 		//For Editor
-		if(!PlayerController.objectDrag){
-			if(Input.GetMouseButtonDown(0)){ //Drag starts
-				mousePosStart = Input.mousePosition;
-				drag = true;
-			}
-			if(Input.GetMouseButton(0) && drag){ //Dragging
-				mousePosEnd = Input.mousePosition;
-				rotationX = Input.GetAxis("Mouse X") * 15;
-				rotationX = Mathf.Clamp (rotationX, minimumY, maximumY);
-				transform.localEulerAngles = new Vector3(-rotationX, transform.localEulerAngles.y, 0);
-				transform.RotateAround(new Vector3(0, 0, 0), Vector3.up, rotationX);
-				transform.LookAt(Vector3.zero);
+        //if(!PlayerController.objectDrag){
+        //    if(Input.GetMouseButtonDown(0)){ //Drag starts
+        //        mousePosStart = Input.mousePosition;
+        //        drag = true;
+        //    }
+        //    if(Input.GetMouseButton(0) && drag){ //Dragging
+        //        mousePosEnd = Input.mousePosition;
+        //        rotationX = Input.GetAxis("Mouse X") * 15;
+        //        rotationX = Mathf.Clamp (rotationX, minimumY, maximumY);
+        //        transform.localEulerAngles = new Vector3(-rotationX, transform.localEulerAngles.y, 0);
+        //        transform.RotateAround(new Vector3(0, 0, 0), Vector3.up, rotationX);
+        //        transform.LookAt(Vector3.zero);
 
-				currentRotation += rotationX;
-				currentRotation %= 360;
-				//Debug.Log ("LOL " + currentRotation); 
-			}
-			if(Input.GetMouseButtonUp(0) && drag){ //Drag ends
-				drag = false;
-			}
-		}
+        //        currentRotationX += rotationX;
+        //        currentRotationX %= 360;
+        //        //Debug.Log ("LOL " + currentRotation); 
+        //    }
+        //    if(Input.GetMouseButtonUp(0) && drag){ //Drag ends
+        //        drag = false;
+        //    }
+        //}
 
 		//For in-game
 		if(!PlayerController.objectDrag){
@@ -56,16 +58,37 @@ public class CameraController: MonoBehaviour
 			}
 			if(Input.touches.Length > 0 && drag && Input.touches[0].phase == TouchPhase.Moved){
 				mousePosEnd = Input.touches[0].position;
-				print ("Moving " + mousePosEnd);
-				rotationX = (mousePosEnd.x > mousePosStart.x ? 1 : -1) * 15 * (Mathf.Abs(mousePosEnd.x - mousePosStart.x) / Screen.width);
-				print (rotationX);
-				rotationX = Mathf.Clamp (rotationX, minimumY, maximumY);
-				transform.localEulerAngles = new Vector3(-rotationX, transform.localEulerAngles.y, 0);
-				transform.RotateAround(new Vector3(0, 0, 0), Vector3.up, rotationX);
+				//print ("Moving " + mousePosEnd);
+				rotationX = (mousePosEnd.x > mousePosStart.x ? 1 : -1)  * (Mathf.Abs(mousePosEnd.x - mousePosStart.x)) / 100;
+                rotationY = (mousePosEnd.y > mousePosStart.y ? 1 : -1)  * (Mathf.Abs(mousePosEnd.y - mousePosStart.y)) / 100;
+                
+				rotationX = Mathf.Clamp(rotationX, minimumX, maximumX);
+                rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+
+                
+
+                //transform.localEulerAngles = new Vector3(-rotationX, -rotationY, 0);
+                
+                transform.RotateAround(new Vector3(0, 0, 0), Vector3.up, rotationX);
+
+                //if (transform.localEulerAngles.x >= 15 && transform.localEulerAngles.x <= 80) {
+                //    transform.RotateAround(new Vector3(0, 0, 0), Vector3.left, rotationY);
+                //}
+                //else {
+                //    transform.RotateAround(new Vector3(0, 0, 0), Vector3.right, rotationY);
+                //}
+
+
+                print(rotationX);
+
+
 				transform.LookAt(Vector3.zero);
 				
-				currentRotation += rotationX;
-				currentRotation %= 360;
+				currentRotationX += rotationX;
+				currentRotationX %= 360;
+
+                currentRotationY += rotationY;
+                currentRotationY %= 360;
 			}
 			if(Input.touches.Length <= 0){ //Drag ends
 				drag = false;
