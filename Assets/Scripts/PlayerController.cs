@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerController : MonoBehaviour {
 	public Rigidbody rb;
 	public static bool objectDrag = false;
+    bool one_click = false;
+    DateTime timer_for_double_click;
+    float delay = 700;
+
 
 	// Use this for initialization
 	void Start () {
@@ -12,7 +17,22 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	}
+        if (Input.touches.Length > 0) {
+            if(!one_click){ // first click no previous clicks
+                one_click = true; 
+                timer_for_double_click = System.DateTime.Now; 
+            } 
+            else{
+                one_click = false; 
+            }
+        }
+        if(one_click){
+            if((System.DateTime.Now - timer_for_double_click).Milliseconds > delay){
+                print("LOL");
+                one_click = false;
+            }
+	    }
+    }
 
 	void FixedUpdate () {
 
@@ -25,7 +45,13 @@ public class PlayerController : MonoBehaviour {
 		//Sets the mouse pointers vector3
 		mousePreviousLocation = new Vector3(Input.mousePosition.x, Input.mousePosition.y, gameObjectSreenPoint.z);
 		objectDrag = true;
+
+
 	}
+
+    void DoubleClick() {
+
+    }
 
 	public Vector3 gameObjectSreenPoint;
 	public Vector3 mousePreviousLocation;
