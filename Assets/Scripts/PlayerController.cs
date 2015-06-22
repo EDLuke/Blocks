@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
         if (Input.touches.Length > 0) {
             if(!one_click){ // first click no previous clicks
                 one_click = true; 
@@ -28,7 +29,6 @@ public class PlayerController : MonoBehaviour {
         }
         if(one_click){
             if((System.DateTime.Now - timer_for_double_click).Milliseconds > delay){
-                print("LOL");
                 one_click = false;
             }
 	    }
@@ -45,8 +45,6 @@ public class PlayerController : MonoBehaviour {
 		//Sets the mouse pointers vector3
 		mousePreviousLocation = new Vector3(Input.mousePosition.x, Input.mousePosition.y, gameObjectSreenPoint.z);
 		objectDrag = true;
-
-
 	}
 
     void DoubleClick() {
@@ -83,8 +81,4 @@ public class PlayerController : MonoBehaviour {
 	{
 		objectDrag = false;
 	}
-
-//	void OnCollisionEnter(Collision collision) {
-//		rb.AddForce(-transform.forward * 500);
-//	}
 }
