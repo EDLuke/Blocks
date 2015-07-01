@@ -90,6 +90,9 @@ public class CameraController: MonoBehaviour
                 float deltaMagnitudediff = prevTouchDeltaMag - touchDeltaMag;
 
                 Camera.main.orthographicSize += deltaMagnitudediff * orthoZoomSpeed;
+                if (Camera.main.orthographicSize <= 2) {
+                    Camera.main.orthographicSize = 2;
+                }
                 Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize, 0.1f);
             }
 			else{ //Drag ends
