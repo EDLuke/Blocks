@@ -1289,6 +1289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0feac68fd191bc645a8b5b92b71ae237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  silhouette: {fileID: 4800000, guid: 0dffe642c7172f0498ed1fa4f62d66f3, type: 3}
 --- !u!4 &976502992
 Transform:
   m_ObjectHideFlags: 0
@@ -1356,7 +1357,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1154584020}
   m_LocalRotation: {x: .408217937, y: -.234569728, z: .109381676, w: .875426054}
-  m_LocalPosition: {x: .300000012, y: 1.20000005, z: -.699999988}
+  m_LocalPosition: {x: 0, y: 250, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1371,7 +1372,7 @@ GameObject:
   - 4: {fileID: 1164900089}
   m_Layer: 0
   m_Name: 3D Cubes
-  m_TagString: Untagged
+  m_TagString: 3DCube
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1784,7 +1785,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: -10
+  near clip plane: -100
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -1811,6 +1812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31158a3511626542b841c36064c1530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  orthoZoomSpeed: .100000001
   minimumX: -2
   maximumX: 2
   minimumY: -.699999988
@@ -1947,7 +1949,7 @@ GameObject:
   - 23: {fileID: 1695799168}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Plane
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2003,7 +2005,7 @@ Transform:
   m_GameObject: {fileID: 1695799167}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1, z: 1.5}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
