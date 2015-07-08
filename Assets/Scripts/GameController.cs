@@ -4,6 +4,7 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
     private ArrayList touchInstances;
+    Vector2 maxXZ = new Vector2(Screen.width * 1f, Screen.height * 1f);
 
     public Shader silhouette;
     private Shader standard;
@@ -12,6 +13,7 @@ public class GameController : MonoBehaviour {
 
     private class TouchInstance{
         private ArrayList fingerIds;
+        private int lastFingerId;
         private Transform transform;
         private Vector3 position;
         private Vector2 touchPosition;
@@ -28,14 +30,23 @@ public class GameController : MonoBehaviour {
 
         public void AddFingerId(int fingerId) {
             fingerIds.Add(fingerId);
+            lastFingerId = fingerId;
         }
 
         public void RemoveFingerId(int fingerId) {
             fingerIds.Remove(fingerId);
         }
 
+        public int GetLastId() {
+            return lastFingerId;
+        }
+
         public Transform GetTransform() {
             return transform;
+        }
+
+        public Transform GetClosest() {
+            return closest;
         }
 
         public bool ContainsId(int fingerId) {
@@ -54,6 +65,12 @@ public class GameController : MonoBehaviour {
             this.touchPosition = touchPosition;
         }
 
+        public void RecalculateTouchPosition(Vector2 touchPosition) {
+            if (TouchCount() > 1) {
+                this.touchPosition = (touchPosition - this.touchPosition) * 0.5f + this.touchPosition;
+            }
+        }
+
         public void SetPosition(Vector3 position) {
             this.position = position;
         }
@@ -62,9 +79,9 @@ public class GameController : MonoBehaviour {
             return fingerIds.Count;
         }
 
-        public Vector2 GetNormalizedDistance() {
-            Vector3 normalized = (closest.position - transform.position).normalized;
-            return new Vector2(normalized.x, normalized.z);
+        public Vector2 GetDistance() {
+            Vector3 distance = (closest.position - transform.position);
+            return new Vector2(distance.x, distance.z);
         }
     }
 
@@ -99,10 +116,6 @@ public class GameController : MonoBehaviour {
 
         //Remove the ended touches
         foreach (TouchInstance instance in touchInstances) {
-            if (instance.TouchCount() > 1 && instance.ContainsId(touch.fingerId)) {
-                instance.RemoveFingerId(touch.fingerId);
-                newList.Add(instance);
-            }
             if (!instance.ContainsId(touch.fingerId)) {
                 newList.Add(instance);
             }
@@ -134,27 +147,49 @@ public class GameController : MonoBehaviour {
                     Vector3 force = currentPos - previousPos;
 
                     force *= 15f;
-                    //print(rb.name + "\t" + force);
-                    //print(force);
 
                     rb.velocity = force;
-                    //instance.SetPosition(currentPos);
+
                     ResetLayer();
                     instance.SetTouchPosition(touch.position);
 
                 }
                 else { //Clipped to the nearest object
-                    //print(touch.deltaPosition);
-                    Vector2 forceXZ = instance.GetNormalizedDistance() / 3f;
-                    Vector2 touchPosition = instance.GetTouchPosition();
-
-                    forceXZ *= (touchPosition.x - touch.position.x);
-                    Vector3 force = new Vector3(forceXZ.x, (touch.position.y - touchPosition.y) / 10f, forceXZ.y) * 2f;
+                    //print(instance.GetLastId() + " : " + touch.fingerId);
                     
-                    print(force);
-                    rb.velocity = force;
-                    instance.SetTouchPosition(touch.position);
+                    if (touch.fingerId == instance.GetLastId()) {
+                        
+                        Vector2 forceXZ = instance.GetDistance();
+                        print(forceXZ);
+                        float ratio = forceXZ.magnitude / maxXZ.x;
+                        float maxTouchHeight = maxXZ.y * ratio;
+                        float maxTouchWidth = forceXZ.magnitude;
+                        Vector2 currentTouchPosition = instance.GetTouchPosition();
+                        Vector2 previousTouchPosition = touch.position;
+                        Vector2 deltaTouchPosition = currentTouchPosition - previousTouchPosition;
 
+                        
+
+
+                        if (forceXZ.x > 0) {
+                            deltaTouchPosition.x *= -1;
+                        }
+                        
+
+                        Vector3 force = new Vector3(deltaTouchPosition.x * forceXZ.x, deltaTouchPosition.y * -2, deltaTouchPosition.x * forceXZ.y);
+                        //print(force);
+
+                        if (force.magnitude > 10) {
+                            force = force.normalized * 10;
+                        }
+
+                        //forceXZ *= (touch.position.x - touchPosition.x);
+                        //Vector3 force = new Vector3(forceXZ.x / 10f, (touch.position.y - touchPosition.y), forceXZ.y / 10f);
+
+
+                        rb.velocity = force;
+                        instance.SetTouchPosition(touch.position);
+                    }
                 }
                 
                 
@@ -181,6 +216,7 @@ public class GameController : MonoBehaviour {
 
             if (!contains) {
                 touchInstances.Add(new TouchInstance(touch.fingerId, tf, FindClosestCube(tf), tf.position, touch.position));
+                print(FindClosestCube(tf).name);
             }
         }
     }
