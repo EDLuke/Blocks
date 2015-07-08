@@ -63,13 +63,7 @@ public class GameController : MonoBehaviour {
 
         public void SetTouchPosition(Vector2 touchPosition) {
             this.touchPosition = touchPosition;
-        }
-
-        public void RecalculateTouchPosition(Vector2 touchPosition) {
-            if (TouchCount() > 1) {
-                this.touchPosition = (touchPosition - this.touchPosition) * 0.5f + this.touchPosition;
-            }
-        }
+        }	
 
         public void SetPosition(Vector3 position) {
             this.position = position;
@@ -141,7 +135,6 @@ public class GameController : MonoBehaviour {
                     IgnoreLayer();
                     if (Physics.Raycast(rayMove, out hitMove)) {
                         currentPos = hitMove.point;
-                        //print(hitMove.point);
                         currentPos.y = 1;
                     }
                     Vector3 force = currentPos - previousPos;
@@ -154,11 +147,8 @@ public class GameController : MonoBehaviour {
                     instance.SetTouchPosition(touch.position);
 
                 }
-                else { //Clipped to the nearest object
-                    //print(instance.GetLastId() + " : " + touch.fingerId);
-                    
-                    if (touch.fingerId == instance.GetLastId()) {
-                        
+                else { //Clipped to the nearest object               
+                    if (touch.fingerId == instance.GetLastId()) {    
                         Vector2 forceXZ = instance.GetDistance();
                         print(forceXZ);
                         float ratio = forceXZ.magnitude / maxXZ.x;
@@ -168,24 +158,16 @@ public class GameController : MonoBehaviour {
                         Vector2 previousTouchPosition = touch.position;
                         Vector2 deltaTouchPosition = currentTouchPosition - previousTouchPosition;
 
-                        
-
-
                         if (forceXZ.x > 0) {
                             deltaTouchPosition.x *= -1;
                         }
                         
-
                         Vector3 force = new Vector3(deltaTouchPosition.x * forceXZ.x, deltaTouchPosition.y * -2, deltaTouchPosition.x * forceXZ.y);
                         //print(force);
 
                         if (force.magnitude > 10) {
                             force = force.normalized * 10;
                         }
-
-                        //forceXZ *= (touch.position.x - touchPosition.x);
-                        //Vector3 force = new Vector3(forceXZ.x / 10f, (touch.position.y - touchPosition.y), forceXZ.y / 10f);
-
 
                         rb.velocity = force;
                         instance.SetTouchPosition(touch.position);
