@@ -198,7 +198,7 @@ public class GameController : MonoBehaviour {
 
             if (!contains) {
                 touchInstances.Add(new TouchInstance(touch.fingerId, tf, FindClosestCube(tf), tf.position, touch.position));
-                print(FindClosestCube(tf).name);
+                //print(FindClosestCube(tf).name);
             }
         }
     }
@@ -209,12 +209,12 @@ public class GameController : MonoBehaviour {
     }
 
     Transform FindClosestCube(Transform tf) {
-        GameObject[] gos;
-        gos = GameObject.FindGameObjectsWithTag("3DCube");
+        GameObject[] gameObjectGroup;
+        gameObjectGroup = GameObject.FindGameObjectsWithTag("3DCube");
         GameObject closest = null;
         float distance = Mathf.Infinity;
         Vector3 position = tf.position;
-        foreach (GameObject go in gos) {
+        foreach (GameObject go in gameObjectGroup) {
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance) {
@@ -224,7 +224,7 @@ public class GameController : MonoBehaviour {
                 } 
             }
         }
-        return closest.GetComponent<Transform>();
+        return (gameObjectGroup.Length == 1) ? tf : closest.GetComponent<Transform>();
     }
 
     private void IgnoreLayer() {
