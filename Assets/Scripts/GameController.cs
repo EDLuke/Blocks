@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour {
         private Vector2 touchPosition;
         private Transform closest;
 
-        public TouchInstance(int initialId, Transform transform, Transform closest, Vector3 initialPosition, Vector2 touchPosition) {
+		public TouchInstance(int initialId, Transform transform, Transform closest, Vector3 initialPosition, Vector2 touchPosition) {
             fingerIds = new ArrayList();
             fingerIds.Add(initialId);
             this.transform = transform;
@@ -110,6 +110,7 @@ public class GameController : MonoBehaviour {
 
         //Remove the ended touches
         foreach (TouchInstance instance in touchInstances) {
+			instance.GetTransform().GetComponent<Rigidbody>().mass = 10;
             if (!instance.ContainsId(touch.fingerId)) {
                 newList.Add(instance);
             }
@@ -122,12 +123,14 @@ public class GameController : MonoBehaviour {
     private void TouchMoved(Touch touch) {
         Ray rayMove = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hitMove;
-
+		Vector3 currentAccelerometer = Input.acceleration;
         foreach (TouchInstance instance in touchInstances) {
             if (instance.ContainsId(touch.fingerId)) {
                 objectDrag = true;
                 Transform tf = instance.GetTransform();
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
+
+				rb.mass = 1;
                 Vector3 previousPos = tf.position;
                 Vector3 currentPos = new Vector3();
 
@@ -150,7 +153,6 @@ public class GameController : MonoBehaviour {
                 else { //Clipped to the nearest object               
                     if (touch.fingerId == instance.GetLastId()) {    
                         Vector2 forceXZ = instance.GetDistance();
-                        print(forceXZ);
                         float ratio = forceXZ.magnitude / maxXZ.x;
                         float maxTouchHeight = maxXZ.y * ratio;
                         float maxTouchWidth = forceXZ.magnitude;
@@ -158,12 +160,12 @@ public class GameController : MonoBehaviour {
                         Vector2 previousTouchPosition = touch.position;
                         Vector2 deltaTouchPosition = currentTouchPosition - previousTouchPosition;
 
-                        if (forceXZ.x > 0) {
+
+						if(Camera.main.WorldToScreenPoint(rb.position).x < Camera.main.WorldToScreenPoint(instance.GetClosest().position).x){
                             deltaTouchPosition.x *= -1;
-                        }
+						}
                         
                         Vector3 force = new Vector3(deltaTouchPosition.x * forceXZ.x, deltaTouchPosition.y * -2, deltaTouchPosition.x * forceXZ.y);
-                        //print(force);
 
                         if (force.magnitude > 10) {
                             force = force.normalized * 10;
@@ -197,8 +199,13 @@ public class GameController : MonoBehaviour {
             }
 
             if (!contains) {
+				//handle rotation
+				if(touch.tapCount == 2){
+					tf.RotateAround(tf.position, Vector3.up, 90);
+				}
+
+				//if not taping, add to arraylist
                 touchInstances.Add(new TouchInstance(touch.fingerId, tf, FindClosestCube(tf), tf.position, touch.position));
-                //print(FindClosestCube(tf).name);
             }
         }
     }
@@ -209,8 +216,7 @@ public class GameController : MonoBehaviour {
     }
 
     Transform FindClosestCube(Transform tf) {
-        GameObject[] gameObjectGroup;
-        gameObjectGroup = GameObject.FindGameObjectsWithTag("3DCube");
+        GameObject[] gameObjectGroup = GameObject.FindGameObjectsWithTag("3DCube");
         GameObject closest = null;
         float distance = Mathf.Infinity;
         Vector3 position = tf.position;
@@ -218,13 +224,14 @@ public class GameController : MonoBehaviour {
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance) {
-                if (go.name != tf.name && go.name != "3D Cubes") {
+				if (go.GetComponent<Transform>().position != tf.position && go.name != "3D Cubes") {
                     closest = go;
                     distance = curDistance;
                 } 
             }
         }
-        return (gameObjectGroup.Length == 1) ? tf : closest.GetComponent<Transform>();
+
+        return (gameObjectGroup.Length <= 1) ? tf : closest.GetComponent<Transform>();
     }
 
     private void IgnoreLayer() {

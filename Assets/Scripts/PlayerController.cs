@@ -17,14 +17,12 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (transform.position.y < 0) {
-			if(gameObject.name.Contains("Clone")){
-				Destroy(gameObject);
-			}
-			else{
+			if (gameObject.name.Contains ("Clone")) {
+				Destroy (gameObject);
+			} else {
 				gameObject.SetActive (false);
 			}
-		}
-        
+		}        
     }
 
     void OnCollisionEnter(Collision col) {
