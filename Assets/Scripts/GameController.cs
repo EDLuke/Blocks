@@ -138,9 +138,10 @@ public class GameController : MonoBehaviour {
                     IgnoreLayer();
                     if (Physics.Raycast(rayMove, out hitMove)) {
                         currentPos = hitMove.point;
-                        currentPos.y = 1;
+                        currentPos.y = tf.position.y; //change Y to be the current height so when objects are stacked bottom ones won't be touched
                     }
                     Vector3 force = currentPos - previousPos;
+
 
                     force *= 15f;
 
@@ -199,13 +200,19 @@ public class GameController : MonoBehaviour {
             }
 
             if (!contains) {
+				Transform closest = FindClosestCube(tf);
+
 				//handle rotation
 				if(touch.tapCount == 2){
-					tf.RotateAround(tf.position, Vector3.up, 90);
+					print (closest.localRotation + " : " + closest.name);
+					tf.rotation = closest.rotation * Quaternion.Euler(90, 0, 0);
+					//tf.RotateAround(tf.position, Vector3.up, 90);
+					print (tf.localRotation);
+					
 				}
 
 				//if not taping, add to arraylist
-                touchInstances.Add(new TouchInstance(touch.fingerId, tf, FindClosestCube(tf), tf.position, touch.position));
+                touchInstances.Add(new TouchInstance(touch.fingerId, tf, closest, tf.position, touch.position));
             }
         }
     }
