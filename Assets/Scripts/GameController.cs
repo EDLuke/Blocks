@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour {
         private Vector3 position;
         private Vector2 touchPosition;
         private Transform closest;
+		private Quaternion originalRotation;
+		private float originalHeight;
 
 		public TouchInstance(int initialId, Transform transform, Transform closest, Vector3 initialPosition, Vector2 touchPosition) {
             fingerIds = new ArrayList();
@@ -26,6 +28,8 @@ public class GameController : MonoBehaviour {
             this.position = initialPosition;
             this.closest = closest;
             this.touchPosition = touchPosition;
+			this.originalRotation = transform.rotation;
+			this.originalHeight = transform.position.y;
         }
 
         public void AddFingerId(int fingerId) {
@@ -48,6 +52,14 @@ public class GameController : MonoBehaviour {
         public Transform GetClosest() {
             return closest;
         }
+
+		public Quaternion GetRotation(){
+			return originalRotation;
+		}
+
+		public float GetHeight(){
+			return originalHeight;
+		}
 
         public bool ContainsId(int fingerId) {
             return fingerIds.Contains(fingerId);
@@ -123,7 +135,7 @@ public class GameController : MonoBehaviour {
     private void TouchMoved(Touch touch) {
         Ray rayMove = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hitMove;
-		Vector3 currentAccelerometer = Input.acceleration;
+		
         foreach (TouchInstance instance in touchInstances) {
             if (instance.ContainsId(touch.fingerId)) {
                 objectDrag = true;
@@ -131,15 +143,19 @@ public class GameController : MonoBehaviour {
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
 
 				rb.mass = 1;
+				rb.freezeRotation = true;
                 Vector3 previousPos = tf.position;
                 Vector3 currentPos = new Vector3();
 
                 if (instance.TouchCount() == 1) { //Free Moving 2D
                     IgnoreLayer();
-                    if (Physics.Raycast(rayMove, out hitMove)) {
+					                  
+					if (Physics.Raycast(rayMove, out hitMove)) {
                         currentPos = hitMove.point;
-                        currentPos.y = tf.position.y; //change Y to be the current height so when objects are stacked bottom ones won't be touched
-                    }
+						currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched
+                    	
+					}
+					
                     Vector3 force = currentPos - previousPos;
 
 
@@ -180,11 +196,14 @@ public class GameController : MonoBehaviour {
                 
             }
         }
+		
     }
 
     private void TouchBegan(Touch touch) {
         Ray ray = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hit;
+		//planeClone.SetActive (true);
+		//planeClone.GetComponent<Collider> ().enabled = false;
         if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane") {
             objectDrag = true;
 
