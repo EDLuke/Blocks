@@ -43,32 +43,60 @@ public class UIController : MonoBehaviour {
 
 	private void assignBtnListen(GameObject currentPanel){
 		GameObject nextPanel = new GameObject ();
+		GameObject previousPanel = new GameObject ();
 		Button[] buttons = currentPanel.GetComponentsInChildren<Button> (true);
 		foreach (Button btn in buttons) {
-			
-			btn.onClick.AddListener(delegate {
-				switch (currentPanel.name.Substring (5)) {
-				case "Shape":
-					if(btn.name.Substring (3) == "RectangleCube" || btn.name.Substring (3) == "TriangleEquilateral"){
-						nextPanel = panelVariation;
+		
+			if(btn.name.Contains("Back")){
+				btn.onClick.AddListener(delegate {
+					switch (currentPanel.name.Substring (5)){
+					case "Shape":
 						movePanels(true);
+						break;
+					case "Variation":
+						previousPanel = panelShape;
+						break;
+					case "Size":
+						if(panelVariation.activeSelf){
+							previousPanel = panelVariation;
+						}
+						else{
+							previousPanel = panelShape;
+						}
+						break;
+					case "Color":
+						previousPanel = panelSize;
+						break;
 					}
-					else{
+					previousPanel.SetActive(true);
+					currentPanel.SetActive(false);
+				});
+			}
+			else{
+				btn.onClick.AddListener(delegate {
+					switch (currentPanel.name.Substring (5)){
+					case "Shape":
+						if(btn.name.Substring (3) == "RectangleCube" || btn.name.Substring (3) == "TriangleEquilateral"){
+							nextPanel = panelVariation;
+							movePanels(true);
+						}
+						else{
+							nextPanel = panelSize;
+							movePanels(false);
+						}
+						break;
+					case "Variation":
 						nextPanel = panelSize;
-						movePanels(false);
+						break;
+					case "Size":
+						nextPanel = panelColor;
+						break;
+					case "Color":
+						break;
 					}
-					break;
-				case "Variation":
-					nextPanel = panelSize;
-					break;
-				case "Size":
-					nextPanel = panelColor;
-					break;
-				case "Color":
-					break;
-				}
-				nextPanel.SetActive(true);
-			});
+					nextPanel.SetActive(true);
+				});
+			}
 		}
 
 	}
