@@ -25,6 +25,8 @@ public class CameraController: MonoBehaviour
 
 	public bool drag;
 
+	private Vector3 cameraOrigin;
+
 	void Update ()
 	{
 		if(!GameController.objectDrag){ //Disables camera when an game object is being dragged
@@ -75,7 +77,7 @@ public class CameraController: MonoBehaviour
 				transform.RotateAround (new Vector3 (0, 0, 0), Vector3.right, 45 - transform.localEulerAngles.x);
 			}
 			//Look at the center point
-			transform.LookAt (Vector3.zero);
+			transform.LookAt (cameraOrigin);
 			currentRotationX += rotationX;
 			currentRotationX %= 360;
 			currentRotationY += rotationY;
@@ -99,6 +101,8 @@ public class CameraController: MonoBehaviour
 				if (Mathf.Abs (touchZero.deltaPosition.x) > 3) {
 					//horizontal
 					Camera.main.transform.position = new Vector3 (currentPosition.x + 0.1f * Mathf.Sign (touchZero.deltaPosition.x), currentPosition.y, currentPosition.z - 0.1f * Mathf.Sign (touchZero.deltaPosition.x));
+					cameraOrigin.x += 0.1f * Mathf.Sign (touchZero.deltaPosition.x);
+					cameraOrigin.z -= 0.1f * Mathf.Sign (touchZero.deltaPosition.x);
 				}
 			}
 			else {
@@ -120,6 +124,7 @@ public class CameraController: MonoBehaviour
 				if (Mathf.Abs (touchZero.deltaPosition.y) > 3) {
 					//vertical
 					Camera.main.transform.position = new Vector3 (currentPosition.x, currentPosition.y + 0.1f * Mathf.Sign (touchZero.deltaPosition.y), currentPosition.z);
+					cameraOrigin.z += 0.1f * Mathf.Sign (touchZero.deltaPosition.y);
 				}
 			}
 			else {
@@ -140,6 +145,7 @@ public class CameraController: MonoBehaviour
 	void Start ()
 	{
 		drag = false;
+		cameraOrigin = new Vector3 (0f, 0f, 0f);
         currentRotationX = transform.localEulerAngles.y;
 	}
 }
