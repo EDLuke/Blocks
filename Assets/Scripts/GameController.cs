@@ -123,6 +123,7 @@ public class GameController : MonoBehaviour {
         //Remove the ended touches
         foreach (TouchInstance instance in touchInstances) {
 			instance.GetTransform().GetComponent<Rigidbody>().mass = 10;
+			instance.GetTransform().GetComponent<Rigidbody>().freezeRotation = false;
             if (!instance.ContainsId(touch.fingerId)) {
                 newList.Add(instance);
             }
@@ -222,19 +223,35 @@ public class GameController : MonoBehaviour {
 				Transform closest = FindClosestCube(tf);
 
 				//handle rotation
-				if(touch.tapCount == 2){
-					print (closest.localRotation + " : " + closest.name);
-					tf.rotation = closest.rotation * Quaternion.Euler(90, 0, 0);
-					//tf.RotateAround(tf.position, Vector3.up, 90);
-					print (tf.localRotation);
-					
-				}
+				TapRotate(touch, tf, closest);
+
 
 				//if not taping, add to arraylist
                 touchInstances.Add(new TouchInstance(touch.fingerId, tf, closest, tf.position, touch.position));
             }
         }
     }
+
+	private void TapRotate(Touch touch, Transform tf, Transform closest){
+		if(touch.tapCount == 2){
+			if(tf.rotation == closest.rotation){
+				tf.RotateAround(tf.position, Vector3.up, 90);
+			}
+			else{
+				tf.rotation = closest.rotation;
+			}
+		}
+		else if(touch.tapCount == 3){
+			if(tf.rotation == closest.rotation){
+				tf.RotateAround(tf.position, Vector3.right, 90);
+			}
+			else{
+				tf.rotation = closest.rotation;
+			}	
+		}
+
+		print (tf.rotation + "\t" + closest.rotation);
+	}
 
     public void Reset() {
         Application.LoadLevel(0);

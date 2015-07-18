@@ -14,9 +14,6 @@ public class CameraController: MonoBehaviour
     float rotationX = 0F;
     float rotationY = 0F;
 
-	public static float currentRotationX;
-    public static float currentRotationY;
-
     private float deltaX;
     private float deltaY;
 
@@ -64,24 +61,20 @@ public class CameraController: MonoBehaviour
 			rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
 			//Rotate the camera around the center point
 			if (Mathf.Abs (deltaX) > Mathf.Abs (deltaY)) {
-				transform.RotateAround (new Vector3 (0, 0, 0), Vector3.up, rotationX);
+				transform.RotateAround (cameraOrigin, Vector3.up, rotationX);
 			}
 			else {
-				transform.RotateAround (new Vector3 (0, 0, 0), Vector3.right, -rotationY);
+				transform.RotateAround (cameraOrigin, Vector3.right, -rotationY);
 			}
 			//Restrict the min and max value along the y-axis
 			if (transform.localEulerAngles.x < 15) {
-				transform.RotateAround (new Vector3 (0, 0, 0), Vector3.right, 15 - transform.localEulerAngles.x);
+				transform.RotateAround (cameraOrigin, Vector3.right, 15 - transform.localEulerAngles.x);
 			}
 			if (transform.localEulerAngles.x > 45) {
-				transform.RotateAround (new Vector3 (0, 0, 0), Vector3.right, 45 - transform.localEulerAngles.x);
+				transform.RotateAround (cameraOrigin, Vector3.right, 45 - transform.localEulerAngles.x);
 			}
 			//Look at the center point
 			transform.LookAt (cameraOrigin);
-			currentRotationX += rotationX;
-			currentRotationX %= 360;
-			currentRotationY += rotationY;
-			currentRotationY %= 360;
 		}
 	}
 
@@ -146,6 +139,5 @@ public class CameraController: MonoBehaviour
 	{
 		drag = false;
 		cameraOrigin = new Vector3 (0f, 0f, 0f);
-        currentRotationX = transform.localEulerAngles.y;
 	}
 }
