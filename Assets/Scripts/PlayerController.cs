@@ -8,16 +8,18 @@ public class PlayerController : MonoBehaviour {
 	public Rigidbody rb;
 	public static bool objectDrag = false;
     public AudioSource aud;
-	private bool newlyCreated = true;
-	private Vector3 floatPosition;
+
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
-		floatPosition = transform.position;
-		floatPosition.y += floatHeight;
+
+
+
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -28,10 +30,6 @@ public class PlayerController : MonoBehaviour {
 				gameObject.SetActive (false);
 			}
 		}        
-
-		if (newlyCreated) {
-			//transform.position = floatPosition;
-		}
 
     }
 

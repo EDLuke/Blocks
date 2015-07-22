@@ -206,6 +206,7 @@ public class GameController : MonoBehaviour {
 		//planeClone.SetActive (true);
 		//planeClone.GetComponent<Collider> ().enabled = false;
         if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane") {
+			print (hit.transform.name + "\t" + hit.transform.tag);
             objectDrag = true;
 
             Transform tf = hit.transform;

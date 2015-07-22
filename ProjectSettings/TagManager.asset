@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Plane
   - 3DCube
+  - Aura
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - AuraLayer
   - 
   - 
   - 

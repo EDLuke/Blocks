@@ -68,7 +68,8 @@ public class UIController : MonoBehaviour {
 		btnConfirm.onClick.AddListener (delegate {
 			createdObject.transform.position = newPosition;
 			createdObject.GetComponent<Rigidbody>().useGravity = true;
-			Destroy(createdObject.GetComponent<NewPlayerController>()); //stop rotation
+			createdObject.AddComponent<PlayerController>();	//attach PlayerController
+			Destroy(createdObject.GetComponent<NewPlayerController>()); //detach NewPlayerController
 			createdObject.transform.rotation = Quaternion.identity; //reset rotation
 			createdObject = new GameObject ();
 			
@@ -249,6 +250,7 @@ public class UIController : MonoBehaviour {
 		createdObject.transform.localScale = scale;
 		createdObject.GetComponent<Rigidbody> ().useGravity = false;
 		createdObject.AddComponent <NewPlayerController>();
+		Destroy (createdObject.GetComponent<PlayerController> ());
 		createdObject.SetActive (true);
 		btnConfirm.gameObject.SetActive (true);
 	}
