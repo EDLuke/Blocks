@@ -3,15 +3,20 @@ using System.Collections;
 using System;
 
 public class PlayerController : MonoBehaviour {
+	private const float floatHeight = 5f;
+
 	public Rigidbody rb;
 	public static bool objectDrag = false;
     public AudioSource aud;
-
+	private bool newlyCreated = true;
+	private Vector3 floatPosition;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
+		floatPosition = transform.position;
+		floatPosition.y += floatHeight;
 	}
 	
 	// Update is called once per frame
@@ -23,10 +28,17 @@ public class PlayerController : MonoBehaviour {
 				gameObject.SetActive (false);
 			}
 		}        
+
+		if (newlyCreated) {
+			//transform.position = floatPosition;
+		}
+
     }
 
     void OnCollisionEnter(Collision col) {
         aud.volume = rb.velocity.magnitude;
         aud.Play();
     }
+
+
 }

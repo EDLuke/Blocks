@@ -274,7 +274,8 @@ public class GameController : MonoBehaviour {
             }
         }
 
-        return (gameObjectGroup.Length <= 1) ? tf : closest.GetComponent<Transform>();
+		print (gameObjectGroup.Length);
+        return (gameObjectGroup.Length <= 2) ? tf : closest.GetComponent<Transform>();
     }
 
     private void IgnoreLayer() {

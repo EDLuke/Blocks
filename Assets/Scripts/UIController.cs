@@ -3,8 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
-	private const float large_multi = 2f;
+	private const float large_multi = 1.5f;
 	private const float small_multi = 0.5f;
+	private Vector3 newPosition = new Vector3(0f, 2f, 0f);
 
 	//GameObjects for creation
 	public GameObject cube;
@@ -43,6 +44,12 @@ public class UIController : MonoBehaviour {
 	public Button btnSelected;
 	private Button[] selectedBtns;
 
+	//Smiley face button used for confirmation
+	public Button btnConfirm;
+
+	//Storing infomation for the created object (floating with UI)
+	private GameObject createdObject;
+
 	// Use this for initialization
 	void Start () {
 		btnSelected.gameObject.SetActive (false);
@@ -58,7 +65,13 @@ public class UIController : MonoBehaviour {
 		btnBin.onClick.AddListener (delegate {
 			panelShape.SetActive (true);
 		});
-
+		btnConfirm.onClick.AddListener (delegate {
+			createdObject.transform.position = newPosition;
+			createdObject.GetComponent<Rigidbody>().useGravity = true;
+			btnConfirm.gameObject.SetActive (false);
+		});
+		btnConfirm.gameObject.SetActive (false);
+	
 		calculatePanelsPosition ();
 	}
 
@@ -73,6 +86,7 @@ public class UIController : MonoBehaviour {
 					switch (currentPanel.name.Substring (5)){
 					case "Shape":
 						movePanelsToOriginal(true);
+						selectedBtns[0].gameObject.SetActive(false);
 						break;
 					case "Variation":
 						previousPanel = panelShape;
@@ -86,6 +100,7 @@ public class UIController : MonoBehaviour {
 						else{
 							previousPanel = panelShape;
 						}
+						selectedBtns[0].gameObject.SetActive(false);			
 						selectedBtns[1].gameObject.SetActive(false);
 						
 						break;
@@ -98,6 +113,8 @@ public class UIController : MonoBehaviour {
 					enablePanel(previousPanel);
 					previousPanel.SetActive(true);
 					currentPanel.SetActive(false);
+					disableObjectShowing();
+					
 				});
 			}
 			else{
@@ -126,6 +143,7 @@ public class UIController : MonoBehaviour {
 						nextPanel = panelSize;
 						selectedShape = btnName;
 						showSizePanel();
+						btnPosition.x += 50;
 						selectedBtns[1].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[1].gameObject.SetActive(true);
 						break;
@@ -191,6 +209,9 @@ public class UIController : MonoBehaviour {
 		case "Small":
 			scale = creation.transform.localScale * small_multi;		
 			break;
+		case "Medium":
+			scale = creation.transform.localScale;
+			break;
 		}
 
 		Color color = Color.white;
@@ -213,12 +234,42 @@ public class UIController : MonoBehaviour {
 		case "Violet":
 			color = new Color(1f, 0f, 1f);
 			break;
+		}	
+
+		createdObject = Instantiate(creation, new Vector3 (-5.1f, 12f, -15.34f), Quaternion.identity) as GameObject;
+		createdObject.GetComponent<Renderer> ().material = creation.GetComponent<Renderer> ().material;
+		createdObject.GetComponent<Renderer> ().material.color = color;
+		createdObject.transform.localScale = scale;
+		createdObject.GetComponent<Rigidbody> ().useGravity = false;
+		createdObject.SetActive (true);
+		btnConfirm.gameObject.SetActive (true);
+	}
+
+	private void disableObjectShowing(){
+		if (createdObject != null) {
+			Mesh createdObjectMesh = createdObject.GetComponent<MeshFilter> ().mesh;
+			//Storing the mesh for triangles and cones
+			Destroy (createdObject);
+			switch(createdObject.name){
+			case "TriangleIsoscelesAcute":
+				triangleAcute.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
+				break;
+			case "TriangleIsoscelesObtuse":
+				triangleObtuse.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
+				break;
+			case "TriangleScalene":
+				triangleScalene.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
+				break;
+			case "TriangleEquilateral":
+				triangleEquilateral.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
+				break;
+			case "Cone":
+				cone.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
+				break;
+			}
 		}
 
-		GameObject tempObject = Instantiate(creation, new Vector3(0f, 5f, 0f), Quaternion.identity) as GameObject;
-		tempObject.GetComponent<Renderer> ().material.color = color;
-		tempObject.transform.localScale = scale;
-		tempObject.SetActive (true);
+		btnConfirm.gameObject.SetActive(false);
 	}
 
 
