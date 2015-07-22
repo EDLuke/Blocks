@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 	private const float large_multi = 1.5f;
 	private const float small_multi = 0.5f;
-	private Vector3 newPosition = new Vector3(0f, 2f, 0f);
+	private Vector3 newPosition = new Vector3(0f, 5f, 0f);
 
 	//GameObjects for creation
 	public GameObject cube;
@@ -68,7 +68,14 @@ public class UIController : MonoBehaviour {
 		btnConfirm.onClick.AddListener (delegate {
 			createdObject.transform.position = newPosition;
 			createdObject.GetComponent<Rigidbody>().useGravity = true;
+			Destroy(createdObject.GetComponent<NewPlayerController>()); //stop rotation
+			createdObject.transform.rotation = Quaternion.identity; //reset rotation
+			createdObject = new GameObject ();
+			
 			btnConfirm.gameObject.SetActive (false);
+
+			//De-active the panels and buttons
+			disableUI();
 		});
 		btnConfirm.gameObject.SetActive (false);
 	
@@ -143,7 +150,6 @@ public class UIController : MonoBehaviour {
 						nextPanel = panelSize;
 						selectedShape = btnName;
 						showSizePanel();
-						btnPosition.x += 50;
 						selectedBtns[1].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[1].gameObject.SetActive(true);
 						break;
@@ -157,6 +163,7 @@ public class UIController : MonoBehaviour {
 						selectedColor = btnName;
 						selectedBtns[3].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[3].gameObject.SetActive(true);
+						disableObjectShowing();
 						displayObject();
 						break;
 					}
@@ -241,12 +248,13 @@ public class UIController : MonoBehaviour {
 		createdObject.GetComponent<Renderer> ().material.color = color;
 		createdObject.transform.localScale = scale;
 		createdObject.GetComponent<Rigidbody> ().useGravity = false;
+		createdObject.AddComponent <NewPlayerController>();
 		createdObject.SetActive (true);
 		btnConfirm.gameObject.SetActive (true);
 	}
 
 	private void disableObjectShowing(){
-		if (createdObject != null) {
+		if (createdObject != null && createdObject.name != "New Game Object") {
 			Mesh createdObjectMesh = createdObject.GetComponent<MeshFilter> ().mesh;
 			//Storing the mesh for triangles and cones
 			Destroy (createdObject);
@@ -270,6 +278,18 @@ public class UIController : MonoBehaviour {
 		}
 
 		btnConfirm.gameObject.SetActive(false);
+	}
+
+	public void disableUI(){
+		foreach (GameObject panel in panels) {
+			panel.SetActive(false);
+			foreach(Button btn in panel.GetComponentsInChildren<Button>(true)){
+				btn.interactable = true;
+			}
+		}
+		foreach (Button btn in selectedBtns) {
+			btn.gameObject.SetActive(false);
+		}
 	}
 
 
