@@ -79,7 +79,6 @@ public class UIController : MonoBehaviour {
 			DisableUI();
 		});
 		btnConfirm.gameObject.SetActive (false);
-	
 		CalculatePanelsPosition ();
 	}
 
@@ -247,6 +246,8 @@ public class UIController : MonoBehaviour {
 		createdObject = Instantiate(creation, new Vector3 (-5.1f, 12f, -15.34f), Quaternion.identity) as GameObject;
 		createdObject.GetComponent<Renderer> ().material = creation.GetComponent<Renderer> ().material;
 		createdObject.GetComponent<Renderer> ().material.color = color;
+		createdObject.GetComponent<Renderer>().enabled = true;
+		
 		createdObject.transform.localScale = scale;
 		createdObject.GetComponent<Rigidbody> ().useGravity = false;
 		createdObject.AddComponent <NewPlayerController>();
@@ -257,26 +258,14 @@ public class UIController : MonoBehaviour {
 
 	private void DisableObjectShowing(){
 		if (createdObject != null && createdObject.name != "New Game Object") {
-			Mesh createdObjectMesh = createdObject.GetComponent<MeshFilter> ().mesh;
-			//Storing the mesh for triangles and cones
-			Destroy (createdObject);
-			switch(createdObject.name){
-			case "TriangleIsoscelesAcute":
-				triangleAcute.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
-				break;
-			case "TriangleIsoscelesObtuse":
-				triangleObtuse.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
-				break;
-			case "TriangleScalene":
-				triangleScalene.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
-				break;
-			case "TriangleEquilateral":
-				triangleEquilateral.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
-				break;
-			case "Cone":
-				cone.GetComponent<MeshFilter> ().mesh = createdObjectMesh;
-				break;
-			}
+			//createdObject.GetComponent<Renderer> ().enabled = false;
+			//createdObject.GetComponent<Collider> ().enabled = false;
+			Destroy(createdObject.GetComponent<MeshFilter>().mesh);
+			Destroy(createdObject.GetComponent<Renderer>().material.mainTexture);
+			Destroy(createdObject.GetComponent<Renderer>().material);
+			Destroy(createdObject.GetComponent<AudioSource>());
+			Destroy(createdObject.GetComponent<NewPlayerController>());
+			//Destroy (createdObject);
 		}
 
 		btnConfirm.gameObject.SetActive(false);
