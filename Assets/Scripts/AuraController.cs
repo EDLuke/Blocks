@@ -11,10 +11,17 @@ public class AuraController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (transform != null) {
+		if (parent != null) {
 			transform.position = parent.transform.position;
 			transform.rotation = parent.transform.rotation;
+		} else {
+			Destroy(gameObject);
 		}
+	}
 
+	public GameObject Parent {
+		get {
+			return parent;
+		}
 	}
 }

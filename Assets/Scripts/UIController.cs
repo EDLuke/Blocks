@@ -59,7 +59,7 @@ public class UIController : MonoBehaviour {
 		for (int i = 0; i < panels.Length; i++) {
 			GameObject panel = panels [i];
 			panel.SetActive (false);
-			assignBtnListener (panel);
+			AssignBtnListener (panel);
 			selectedBtns[i].transform.SetParent(panel.transform);
 		}
 		btnBin.onClick.AddListener (delegate {
@@ -76,14 +76,14 @@ public class UIController : MonoBehaviour {
 			btnConfirm.gameObject.SetActive (false);
 
 			//De-active the panels and buttons
-			disableUI();
+			DisableUI();
 		});
 		btnConfirm.gameObject.SetActive (false);
 	
-		calculatePanelsPosition ();
+		CalculatePanelsPosition ();
 	}
 
-	private void assignBtnListener(GameObject currentPanel){
+	private void AssignBtnListener(GameObject currentPanel){
 		GameObject nextPanel = new GameObject ();
 		GameObject previousPanel = new GameObject ();
 		Button[] buttons = currentPanel.GetComponentsInChildren<Button> (true);
@@ -93,7 +93,7 @@ public class UIController : MonoBehaviour {
 				btn.onClick.AddListener(delegate {
 					switch (currentPanel.name.Substring (5)){
 					case "Shape":
-						movePanelsToOriginal(true);
+						MovePanelsToOriginal(true);
 						selectedBtns[0].gameObject.SetActive(false);
 						break;
 					case "Variation":
@@ -118,10 +118,10 @@ public class UIController : MonoBehaviour {
 						selectedBtns[3].gameObject.SetActive(false);
 						break;
 					}
-					enablePanel(previousPanel);
+					EnablePanel(previousPanel);
 					previousPanel.SetActive(true);
 					currentPanel.SetActive(false);
-					disableObjectShowing();
+					DisableObjectShowing();
 					
 				});
 			}
@@ -134,14 +134,14 @@ public class UIController : MonoBehaviour {
 					case "Shape":			
 						if(btnName == "Rectangle" || btnName == "Triangle"){
 							nextPanel = panelVariation;
-							changeVariationPanel(btnName == "Rectangle");
-							movePanelsToOriginal(true);	
+							ChangeVariationPanel(btnName == "Rectangle");
+							MovePanelsToOriginal(true);	
 						}
 						else{
 							nextPanel = panelSize;
-							movePanelsToOriginal(false);	
+							MovePanelsToOriginal(false);	
 							selectedShape = btnName;
-							showSizePanel();		
+							ShowSizePanel();		
 						}
 
 						selectedBtns[0].GetComponent<RectTransform>().anchoredPosition = btnPosition;
@@ -150,7 +150,7 @@ public class UIController : MonoBehaviour {
 					case "Variation":
 						nextPanel = panelSize;
 						selectedShape = btnName;
-						showSizePanel();
+						ShowSizePanel();
 						selectedBtns[1].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[1].gameObject.SetActive(true);
 						break;
@@ -164,18 +164,18 @@ public class UIController : MonoBehaviour {
 						selectedColor = btnName;
 						selectedBtns[3].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[3].gameObject.SetActive(true);
-						disableObjectShowing();
-						displayObject();
+						DisableObjectShowing();
+						DisplayObject();
 						break;
 					}
-					disablePanel(currentPanel);
+					DisablePanel(currentPanel);
 					nextPanel.SetActive(true);
 				});
 			}
 		}
 	}
 
-	private void displayObject(){
+	private void DisplayObject(){
 		//First choose shape
 		GameObject creation = new GameObject ();
 		Vector3 scale = new Vector3 ();
@@ -255,7 +255,7 @@ public class UIController : MonoBehaviour {
 		btnConfirm.gameObject.SetActive (true);
 	}
 
-	private void disableObjectShowing(){
+	private void DisableObjectShowing(){
 		if (createdObject != null && createdObject.name != "New Game Object") {
 			Mesh createdObjectMesh = createdObject.GetComponent<MeshFilter> ().mesh;
 			//Storing the mesh for triangles and cones
@@ -282,7 +282,7 @@ public class UIController : MonoBehaviour {
 		btnConfirm.gameObject.SetActive(false);
 	}
 
-	public void disableUI(){
+	public void DisableUI(){
 		foreach (GameObject panel in panels) {
 			panel.SetActive(false);
 			foreach(Button btn in panel.GetComponentsInChildren<Button>(true)){
@@ -295,7 +295,7 @@ public class UIController : MonoBehaviour {
 	}
 
 
-	private void changeVariationPanel(bool rectangle){
+	private void ChangeVariationPanel(bool rectangle){
 		Button[] buttons = panelVariation.GetComponentsInChildren<Button> (true);
 		for (int i = 0; i < buttons.Length - 2; i++) {
 			if(i < 4){
@@ -326,8 +326,7 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-	private void showSizePanel(){
-		print (selectedShape);
+	private void ShowSizePanel(){
 		Button[] buttons = panelSize.GetComponentsInChildren<Button> (true);
 		buttons[0].image.sprite = Resources.Load<Sprite>("UI/" + selectedShape + "_Small");
 		buttons[1].image.sprite = Resources.Load<Sprite>("UI/" + selectedShape);
@@ -335,7 +334,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	//Do not disable panelColor
-	private void disablePanel(GameObject currentPanel){
+	private void DisablePanel(GameObject currentPanel){
 		if (currentPanel.name != "panelColor") {
 			Color panelColor = currentPanel.GetComponent<Image> ().color;
 			panelColor.a = 0.5f;
@@ -347,7 +346,7 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-	private void enablePanel(GameObject previousPanel){
+	private void EnablePanel(GameObject previousPanel){
 		if (previousPanel.GetComponent<Image> () == null) { //currentPanel is panelShape
 			panelShape.SetActive (false);
 		} else {
@@ -364,7 +363,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	//Find the panels original / with variation positions
-	private void calculatePanelsPosition(){
+	private void CalculatePanelsPosition(){
 		originalSizePosition = panelSize.GetComponent<Transform> ().position;
 		originalColorPosition = panelColor.GetComponent<Transform> ().position;
 
@@ -376,7 +375,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	//Move Panels
-	private void movePanelsToOriginal(bool original){
+	private void MovePanelsToOriginal(bool original){
 		if (original) {
 			panelSize.transform.position = originalSizePosition;
 			panelColor.transform.position = originalColorPosition;		
@@ -385,23 +384,9 @@ public class UIController : MonoBehaviour {
 			panelColor.transform.position = changedColorPosition;		
 		}
 	}
-	
-
-	/*public void chooseMaterial(Material color){
-		selectedMaterial = color;
-		createObject ();
-		panelColor.SetActive (false);
-		
-	}*/
 
 	// Update is called once per frame
 	void Update () {
 
 	}
-	
-	/*private void createObject(){
-		GameObject tempObject = Instantiate(selectedShape, new Vector3(0f, 5f, 0f), Quaternion.identity) as GameObject;
-		tempObject.GetComponent<Renderer> ().material = selectedMaterial;
-		tempObject.SetActive (true);
-	}*/
 }

@@ -5,7 +5,7 @@ public class NewPlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		createAura ();
+		CreateAura ();
 	}
 	
 	// Update is called once per frame
@@ -13,7 +13,7 @@ public class NewPlayerController : MonoBehaviour {
 		transform.Rotate (10*Time.deltaTime,25*Time.deltaTime,15*Time.deltaTime);
 	}
 
-	void createAura(){
+	void CreateAura(){
 		GameObject aura = gameObject;
 		aura.transform.position = transform.position;
 

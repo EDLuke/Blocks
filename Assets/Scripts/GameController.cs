@@ -143,7 +143,7 @@ public class GameController : MonoBehaviour {
                 Transform tf = instance.GetTransform();
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
 
-				rb.mass = 1;
+				rb.mass = 10;
 				rb.freezeRotation = true;
                 Vector3 previousPos = tf.position;
                 Vector3 currentPos = new Vector3();
@@ -153,15 +153,11 @@ public class GameController : MonoBehaviour {
 					                  
 					if (Physics.Raycast(rayMove, out hitMove)) {
                         currentPos = hitMove.point;
-						currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched
-                    	
+						currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
 					}
 					
                     Vector3 force = currentPos - previousPos;
-
-
                     force *= 15f;
-
                     rb.velocity = force;
 
                     ResetLayer();
@@ -169,7 +165,7 @@ public class GameController : MonoBehaviour {
 
                 }
                 else { //Clipped to the nearest object               
-                    if (touch.fingerId == instance.GetLastId()) {    
+                    if (touch.fingerId == instance.GetLastId()) {  
                         Vector2 forceXZ = instance.GetDistance();
                         float ratio = forceXZ.magnitude / maxXZ.x;
                         float maxTouchHeight = maxXZ.y * ratio;
@@ -206,10 +202,10 @@ public class GameController : MonoBehaviour {
 		//planeClone.SetActive (true);
 		//planeClone.GetComponent<Collider> ().enabled = false;
         if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane") {
-			print (hit.transform.name + "\t" + hit.transform.tag);
             objectDrag = true;
-
-            Transform tf = hit.transform;
+			print (hit.transform.gameObject.name);
+            Transform tf = hit.transform.gameObject.GetComponent<AuraController>().Parent.transform;
+			//Transform tf = hit.transform;
             //Renderer shade = tf.GetComponent<Renderer>();
             //shade.material.shader = silhouette;
             bool contains = false;
@@ -250,8 +246,6 @@ public class GameController : MonoBehaviour {
 				tf.rotation = closest.rotation;
 			}	
 		}
-
-		print (tf.rotation + "\t" + closest.rotation);
 	}
 
     public void Reset() {
@@ -275,7 +269,7 @@ public class GameController : MonoBehaviour {
             }
         }
 
-		print (gameObjectGroup.Length);
+		//print (closest.name);
         return (gameObjectGroup.Length <= 2) ? tf : closest.GetComponent<Transform>();
     }
 
@@ -284,12 +278,23 @@ public class GameController : MonoBehaviour {
         foreach (GameObject cube in cubes) {
             cube.layer = 2;
         }
+
+		GameObject[] auras = GameObject.FindGameObjectsWithTag("Aura");
+		foreach (GameObject cube in auras) {
+			cube.layer = 2;
+		}
     }
 
     private void ResetLayer() {
         GameObject[] cubes = GameObject.FindGameObjectsWithTag("3DCube");
         foreach (GameObject cube in cubes) {
-            cube.layer = 1;
+			cube.layer = LayerMask.NameToLayer( "ObjectLayer" );
         }
+
+		GameObject[] auras = GameObject.FindGameObjectsWithTag("Aura");
+		foreach (GameObject cube in auras) {
+			cube.layer = LayerMask.NameToLayer( "AuraLayer" );
+			
+		}
     }
 }

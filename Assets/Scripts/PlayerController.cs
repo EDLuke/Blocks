@@ -14,9 +14,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
-
-
-
+		
 	}
 
 
@@ -30,7 +28,6 @@ public class PlayerController : MonoBehaviour {
 				gameObject.SetActive (false);
 			}
 		}        
-
     }
 
     void OnCollisionEnter(Collision col) {
