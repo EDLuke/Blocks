@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 	private const float large_multi = 1.5f;
 	private const float small_multi = 0.5f;
-	private Vector3 newPosition = new Vector3(0f, 5f, 0f);
+	public static Vector3 newPosition = new Vector3(0f, 5f, 0f);
+	public static Vector3 displayPositionOnScreen = new Vector3(Screen.width / 5 * 4, Screen.height / 3 * 2, -6.1f);
 
 	//GameObjects for creation
 	public GameObject cube;
@@ -71,6 +72,7 @@ public class UIController : MonoBehaviour {
 			createdObject.AddComponent<PlayerController>();	//attach PlayerController
 			Destroy(createdObject.GetComponent<NewPlayerController>()); //detach NewPlayerController
 			createdObject.transform.rotation = Quaternion.identity; //reset rotation
+			createdObject.GetComponent<Collider> ().enabled = true;	
 			createdObject = new GameObject ();
 			
 			btnConfirm.gameObject.SetActive (false);
@@ -78,6 +80,10 @@ public class UIController : MonoBehaviour {
 			//De-active the panels and buttons
 			DisableUI();
 		});
+
+		Vector3 btnConfirmPosition = displayPositionOnScreen;
+		btnConfirmPosition.y -= 6;
+		btnConfirm.GetComponent<RectTransform> ().anchoredPosition = btnConfirmPosition;
 		btnConfirm.gameObject.SetActive (false);
 		CalculatePanelsPosition ();
 	}
@@ -142,7 +148,6 @@ public class UIController : MonoBehaviour {
 							selectedShape = btnName;
 							ShowSizePanel();		
 						}
-
 						selectedBtns[0].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[0].gameObject.SetActive(true);
 						break;
@@ -150,6 +155,13 @@ public class UIController : MonoBehaviour {
 						nextPanel = panelSize;
 						selectedShape = btnName;
 						ShowSizePanel();
+						//For some reason the position for the selected button on Rectangles need to be hard coded
+						if(btnName == "Rectangle"){
+							btnPosition = new Vector2(-51.6f, 0);
+						}
+						else if(btnName == "RectangleFlat"){
+							btnPosition = new Vector2(-1.6f, 0);
+						}
 						selectedBtns[1].GetComponent<RectTransform>().anchoredPosition = btnPosition;
 						selectedBtns[1].gameObject.SetActive(true);
 						break;
@@ -243,13 +255,14 @@ public class UIController : MonoBehaviour {
 			break;
 		}	
 
-		createdObject = Instantiate(creation, new Vector3 (-5.1f, 12f, -15.34f), Quaternion.identity) as GameObject;
+		createdObject = Instantiate(creation, Camera.main.ScreenToWorldPoint(displayPositionOnScreen), Quaternion.identity) as GameObject;
 		createdObject.GetComponent<Renderer> ().material = creation.GetComponent<Renderer> ().material;
 		createdObject.GetComponent<Renderer> ().material.color = color;
 		createdObject.GetComponent<Renderer>().enabled = true;
 		
 		createdObject.transform.localScale = scale;
 		createdObject.GetComponent<Rigidbody> ().useGravity = false;
+		createdObject.GetComponent<Collider> ().enabled = false;
 		createdObject.AddComponent <NewPlayerController>();
 		Destroy (createdObject.GetComponent<PlayerController> ());
 		createdObject.SetActive (true);
@@ -258,8 +271,8 @@ public class UIController : MonoBehaviour {
 
 	private void DisableObjectShowing(){
 		if (createdObject != null && createdObject.name != "New Game Object") {
-			//createdObject.GetComponent<Renderer> ().enabled = false;
-			//createdObject.GetComponent<Collider> ().enabled = false;
+			createdObject.GetComponent<Renderer> ().enabled = false;
+			createdObject.GetComponent<Collider> ().enabled = false;
 			Destroy(createdObject.GetComponent<MeshFilter>().mesh);
 			Destroy(createdObject.GetComponent<Renderer>().material.mainTexture);
 			Destroy(createdObject.GetComponent<Renderer>().material);

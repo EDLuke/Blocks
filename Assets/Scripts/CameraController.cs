@@ -63,7 +63,7 @@ public class CameraController: MonoBehaviour
 			if (Mathf.Abs (deltaX) > Mathf.Abs (deltaY)) {
 				transform.RotateAround (cameraOrigin, Vector3.up, rotationX);
 			}
-			else {
+			else {				
 				transform.RotateAround (cameraOrigin, Vector3.right, -rotationY);
 			}
 			//Restrict the min and max value along the y-axis

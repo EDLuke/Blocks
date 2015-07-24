@@ -2,15 +2,19 @@
 using System.Collections;
 
 public class NewPlayerController : MonoBehaviour {
+	public static Vector3 onScreenPosition;
 
 	// Use this for initialization
 	void Start () {
 		CreateAura ();
+		onScreenPosition = Camera.main.WorldToScreenPoint (transform.position);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		transform.Rotate (10*Time.deltaTime,25*Time.deltaTime,15*Time.deltaTime);
+		transform.position = Camera.main.ScreenToWorldPoint (onScreenPosition);
+		print (Camera.main.WorldToScreenPoint(transform.position));
 	}
 
 	void CreateAura(){
