@@ -7,7 +7,6 @@ public class GameController : MonoBehaviour {
     Vector2 maxXZ = new Vector2(Screen.width * 1f, Screen.height * 1f);
 
     public Shader silhouette;
-    private Shader standard;
 
     public static bool objectDrag = false;
 
@@ -94,8 +93,7 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         touchInstances = new ArrayList();
-
-        standard = Shader.Find("Standard");
+		NewPlayerController.silhouette = silhouette;
 	}
 	
 	// Update is called once per frame
@@ -122,8 +120,10 @@ public class GameController : MonoBehaviour {
 
         //Remove the ended touches
         foreach (TouchInstance instance in touchInstances) {
-			instance.GetTransform().GetComponent<Rigidbody>().mass = 10;
-			instance.GetTransform().GetComponent<Rigidbody>().freezeRotation = false;
+			if(instance.GetTransform() != null){
+				instance.GetTransform().GetComponent<Rigidbody>().mass = 10;
+				instance.GetTransform().GetComponent<Rigidbody>().freezeRotation = false;
+			}
             if (!instance.ContainsId(touch.fingerId)) {
                 newList.Add(instance);
             }
@@ -201,7 +201,7 @@ public class GameController : MonoBehaviour {
         RaycastHit hit;
 		//planeClone.SetActive (true);
 		//planeClone.GetComponent<Collider> ().enabled = false;
-        if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane") {
+		if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane" && hit.transform.tag != "Background") {
             objectDrag = true;
 			print (hit.transform.gameObject.name);
             Transform tf = hit.transform.gameObject.GetComponent<AuraController>().Parent.transform;

@@ -17,11 +17,22 @@ public class AuraController : MonoBehaviour {
 		} else {
 			Destroy(gameObject);
 		}
+
+		if (!WithinBounds ()) {
+			GetComponent<MeshRenderer> ().enabled = true;
+				
+		} else {
+			GetComponent<MeshRenderer> ().enabled = false;	
+		}
 	}
 
 	public GameObject Parent {
 		get {
 			return parent;
 		}
+	}
+
+	private bool WithinBounds(){
+		return (transform.position.x <= 15 && transform.position.y <= 15);
 	}
 }

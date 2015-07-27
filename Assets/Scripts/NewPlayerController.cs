@@ -3,6 +3,8 @@ using System.Collections;
 
 public class NewPlayerController : MonoBehaviour {
 	public static Vector3 onScreenPosition;
+    public static Shader silhouette;
+
 
 	// Use this for initialization
 	void Start () {
@@ -14,7 +16,7 @@ public class NewPlayerController : MonoBehaviour {
 	void Update () {
 		transform.Rotate (10*Time.deltaTime,25*Time.deltaTime,15*Time.deltaTime);
 		transform.position = Camera.main.ScreenToWorldPoint (onScreenPosition);
-		print (Camera.main.WorldToScreenPoint(transform.position));
+//		print (Camera.main.WorldToScreenPoint(transform.position));
 	}
 
 	void CreateAura(){
@@ -23,7 +25,11 @@ public class NewPlayerController : MonoBehaviour {
 
 		
 		GameObject auraCreated = Instantiate (aura, aura.transform.position, Quaternion.identity) as GameObject;
+		//auraCreated.GetComponent<Renderer> ().material.color = Color.red;	
 		auraCreated.GetComponent<MeshRenderer> ().enabled = false;
+		Renderer shade = auraCreated.GetComponent<Renderer>();
+		shade.material.shader = silhouette;
+		auraCreated.GetComponent<Collider> ().enabled = true;
 		auraCreated.transform.localScale = auraCreated.transform.localScale * 1.1f;
 		auraCreated.AddComponent<AuraController> ();
 		auraCreated.GetComponent<AuraController> ().parent = gameObject;
