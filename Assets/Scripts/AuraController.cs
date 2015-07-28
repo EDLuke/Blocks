@@ -18,12 +18,13 @@ public class AuraController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
-		if (!WithinBounds ()) {
-			GetComponent<MeshRenderer> ().enabled = true;
-				
-		} else {
-			GetComponent<MeshRenderer> ().enabled = false;	
-		}
+        if (!WithinBounds()) {
+            GetComponent<MeshRenderer>().enabled = true;
+
+        }
+        else {
+            GetComponent<MeshRenderer>().enabled = false;
+        }
 	}
 
 	public GameObject Parent {
@@ -33,6 +34,6 @@ public class AuraController : MonoBehaviour {
 	}
 
 	private bool WithinBounds(){
-		return (transform.position.x <= 15 && transform.position.y <= 15);
+        return (Mathf.Abs(parent.transform.position.x) <= 15 && Mathf.Abs(parent.transform.position.z) <= 15);
 	}
 }
