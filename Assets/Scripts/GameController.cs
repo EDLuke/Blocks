@@ -171,7 +171,7 @@ public class GameController : MonoBehaviour {
 						
 						Vector3 force = currentPos - previousPos;
 						if(force.magnitude > 1){
-							force = force.normalized * 1;
+							force = force.normalized * (touch.deltaPosition.magnitude / 15);
 						}
 						rb.velocity = force;
 						
