@@ -1188,6 +1188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!23 &364643866
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1514,6 +1515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!82 &414376328
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2521,6 +2523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!82 &673581253
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2759,6 +2762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!54 &705823599
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3202,6 +3206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!23 &950522133
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4208,6 +4213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!23 &1286293189
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4300,6 +4306,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
+  m_RepeatDelay: .5
   m_AllowActivationOnMobileDevice: 0
 --- !u!114 &1351170977
 MonoBehaviour:
@@ -4408,8 +4415,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1496568267}
-  m_LocalRotation: {x: .239117637, y: .369643837, z: -.0990457758, w: .892399073}
-  m_LocalPosition: {x: -6.69000006, y: 6.32999992, z: -7.63999987}
+  m_LocalRotation: {x: .136912629, y: .375769913, z: -.0605190583, w: .914543271}
+  m_LocalPosition: {x: -6.94000006, y: 3.17000008, z: -7.59000015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 15730487}
@@ -4468,6 +4475,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!114 &1496568273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4634,6 +4642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1541013174}
   aud: {fileID: 1541013173}
+  created: 0
 --- !u!114 &1541013177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4849,6 +4858,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!95 &1679698291
 Animator:
   serializedVersion: 3
@@ -6083,6 +6093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
+  created: 0
 --- !u!54 &2143472680
 Rigidbody:
   m_ObjectHideFlags: 0

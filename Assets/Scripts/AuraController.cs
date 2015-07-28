@@ -6,7 +6,7 @@ public class AuraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -18,13 +18,16 @@ public class AuraController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
-        if (!WithinBounds()) {
-            GetComponent<MeshRenderer>().enabled = true;
-
-        }
-        else {
-            GetComponent<MeshRenderer>().enabled = false;
-        }
+			
+		if (parent.GetComponent<PlayerController>() != null && parent.GetComponent<PlayerController>().created) {
+			if (!WithinBounds()) {
+				GetComponent<MeshRenderer>().enabled = true;
+				
+			}
+			else {
+				GetComponent<MeshRenderer>().enabled = false;
+			}
+		}  
 	}
 
 	public GameObject Parent {

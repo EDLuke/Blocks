@@ -8,13 +8,13 @@ public class PlayerController : MonoBehaviour {
 	public Rigidbody rb;
 	public static bool objectDrag = false;
     public AudioSource aud;
-
+	public bool created;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
-		
+		created = false;
 	}
 
 

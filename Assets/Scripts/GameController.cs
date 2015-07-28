@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-
+	private const float nudgeForce = 1.5f;
     private ArrayList touchInstances;
     Vector2 maxXZ = new Vector2(Screen.width * 1f, Screen.height * 1f);
 
@@ -139,6 +139,7 @@ public class GameController : MonoBehaviour {
 		
         foreach (TouchInstance instance in touchInstances) {
             if (instance.ContainsId(touch.fingerId)) {
+				print(touch.deltaPosition.magnitude);
                 objectDrag = true;
                 Transform tf = instance.GetTransform();
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
@@ -148,32 +149,62 @@ public class GameController : MonoBehaviour {
                 Vector3 previousPos = tf.position;
                 Vector3 currentPos = new Vector3();
 
-                if (instance.TouchCount() == 1) { //Free Moving 2D
-                    IgnoreLayer();
-					                  
-					if (Physics.Raycast(rayMove, out hitMove)) {
-                        currentPos = hitMove.point;
-						currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
+                if (instance.TouchCount() == 1) { 
+					if(touch.deltaPosition.magnitude >= 5){ //nudges
+						/*Vector3 force = new Vector3();
+						force.y = tf.position.y;
+						if(Mathf.Abs(touch.deltaPosition.x) > Mathf.Abs(touch.deltaPosition.y)){
+							force.x = nudgeForce;
+							force.z = -nudgeForce;
+						}
+						else{
+							force.x = -nudgeForce;
+							force.z = nudgeForce;
+						}
+						rb.velocity = force;*/
+						IgnoreLayer();
+						
+						if (Physics.Raycast(rayMove, out hitMove)) {
+							currentPos = hitMove.point;
+							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
+						}
+						
+						Vector3 force = currentPos - previousPos;
+						if(force.magnitude > 1){
+							force = force.normalized * 1;
+						}
+						rb.velocity = force;
+						
+						ResetLayer();
 					}
+					else if(touch.deltaPosition.magnitude >= 1){	//Free Moving 2D
+						IgnoreLayer();
+						
+						if (Physics.Raycast(rayMove, out hitMove)) {
+							currentPos = hitMove.point;
+							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
+						}
+						
+						Vector3 force = currentPos - previousPos;
+						force *= 15f;
+						if(force.magnitude > 10){
+                            force = force.normalized * 10;
+						}
+						rb.velocity = force;
+						
+						ResetLayer();
+					}
+					instance.SetTouchPosition(touch.position);
 					
-                    Vector3 force = currentPos - previousPos;
-                    force *= 15f;
-                    rb.velocity = force;
-
-                    ResetLayer();
-                    instance.SetTouchPosition(touch.position);
-
-                }
-                else { //Clipped to the nearest object               
-                    if (touch.fingerId == instance.GetLastId()) {  
+					
+				}
+				else { //Clipped to the nearest object               
+					if (touch.fingerId == instance.GetLastId()) {  
                         Vector2 forceXZ = instance.GetDistance();
                         float ratio = forceXZ.magnitude / maxXZ.x;
-                        float maxTouchHeight = maxXZ.y * ratio;
-                        float maxTouchWidth = forceXZ.magnitude;
                         Vector2 currentTouchPosition = instance.GetTouchPosition();
                         Vector2 previousTouchPosition = touch.position;
                         Vector2 deltaTouchPosition = currentTouchPosition - previousTouchPosition;
-
 
 						if(Camera.main.WorldToScreenPoint(rb.position).x < Camera.main.WorldToScreenPoint(instance.GetClosest().position).x){
                             deltaTouchPosition.x *= -1;

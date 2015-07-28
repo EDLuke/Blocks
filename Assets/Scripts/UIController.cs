@@ -70,6 +70,7 @@ public class UIController : MonoBehaviour {
 			createdObject.transform.position = newPosition;
 			createdObject.GetComponent<Rigidbody>().useGravity = true;
 			createdObject.AddComponent<PlayerController>();	//attach PlayerController
+			createdObject.GetComponent<PlayerController>().created = true; 
 			Destroy(createdObject.GetComponent<NewPlayerController>()); //detach NewPlayerController
 			createdObject.transform.rotation = Quaternion.identity; //reset rotation
 			createdObject.GetComponent<Collider> ().enabled = true;	
