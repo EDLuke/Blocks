@@ -139,31 +139,21 @@ public class GameController : MonoBehaviour {
 		
         foreach (TouchInstance instance in touchInstances) {
             if (instance.ContainsId(touch.fingerId)) {
-				print(touch.deltaPosition.magnitude);
+				//print(touch.deltaPosition.magnitude);
+				//print (touch.deltaTime);
                 objectDrag = true;
                 Transform tf = instance.GetTransform();
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
 
+				print (tf.position);
 				rb.mass = 10;
 				rb.freezeRotation = true;
                 Vector3 previousPos = tf.position;
                 Vector3 currentPos = new Vector3();
 
-                if (instance.TouchCount() == 1) { 
-					if(touch.deltaPosition.magnitude >= 5){ //nudges
-						/*Vector3 force = new Vector3();
-						force.y = tf.position.y;
-						if(Mathf.Abs(touch.deltaPosition.x) > Mathf.Abs(touch.deltaPosition.y)){
-							force.x = nudgeForce;
-							force.z = -nudgeForce;
-						}
-						else{
-							force.x = -nudgeForce;
-							force.z = nudgeForce;
-						}
-						rb.velocity = force;*/
-						IgnoreLayer();
-						
+                if (instance.TouchCount() == 1) {
+					IgnoreLayer();
+					if(touch.deltaPosition.magnitude >= 20){ //nudges
 						if (Physics.Raycast(rayMove, out hitMove)) {
 							currentPos = hitMove.point;
 							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
@@ -171,29 +161,33 @@ public class GameController : MonoBehaviour {
 						
 						Vector3 force = currentPos - previousPos;
 						if(force.magnitude > 1){
-							force = force.normalized * (touch.deltaPosition.magnitude / 15);
+							force = force.normalized * (touch.deltaPosition.magnitude / 30);
 						}
 						rb.velocity = force;
 						
-						ResetLayer();
+
 					}
-					else if(touch.deltaPosition.magnitude >= 1){	//Free Moving 2D
-						IgnoreLayer();
-						
+					else{	//Free Moving 2D
 						if (Physics.Raycast(rayMove, out hitMove)) {
 							currentPos = hitMove.point;
 							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
 						}
-						
-						Vector3 force = currentPos - previousPos;
-						force *= 15f;
-						if(force.magnitude > 10){
-                            force = force.normalized * 10;
+
+						if(tf.gameObject.GetComponent<PlayerController>().touchingOtherObject){
+							Vector3 force = currentPos - previousPos;
+							force *= 15f;
+							if(force.magnitude > 10){
+								force = force.normalized * 10;
+							}
+							rb.velocity = force;
 						}
-						rb.velocity = force;
-						
-						ResetLayer();
+						else{
+							tf.position = currentPos;
+						}
+
+
 					}
+					ResetLayer();
 					instance.SetTouchPosition(touch.position);
 					
 					
@@ -230,29 +224,23 @@ public class GameController : MonoBehaviour {
     private void TouchBegan(Touch touch) {
         Ray ray = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hit;
-		//planeClone.SetActive (true);
-		//planeClone.GetComponent<Collider> ().enabled = false;
+
 		if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane" && hit.transform.tag != "Background") {
             objectDrag = true;
-			print (hit.transform.gameObject.name);
             Transform tf = hit.transform.gameObject.GetComponent<AuraController>().Parent.transform;
-			//Transform tf = hit.transform;
-            //Renderer shade = tf.GetComponent<Renderer>();
-            //shade.material.shader = silhouette;
-            bool contains = false;
+            bool instanceExists = false;
             foreach(TouchInstance instance in touchInstances){
                 if (instance.GetTransform() == tf) {
-                    contains = true;
+                    instanceExists = true;
                     instance.AddFingerId(touch.fingerId);
                 }
             }
 
-            if (!contains) {
+            if (!instanceExists) {
 				Transform closest = FindClosestCube(tf);
 
 				//handle rotation
 				TapRotate(touch, tf, closest);
-
 
 				//if not taping, add to arraylist
                 touchInstances.Add(new TouchInstance(touch.fingerId, tf, closest, tf.position, touch.position));

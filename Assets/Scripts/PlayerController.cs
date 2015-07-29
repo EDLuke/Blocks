@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour {
 	public static bool objectDrag = false;
     public AudioSource aud;
 	public bool created;
+	public bool touchingOtherObject;
 
 	// Use this for initialization
 	void Start () {
+		touchingOtherObject = false;
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
 		created = false;
@@ -31,9 +33,17 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision col) {
+		touchingOtherObject = true;
+		print ("Colliding with " + col.transform.name);
         aud.volume = rb.velocity.magnitude;
         aud.Play();
     }
+
+	void OnCollisionExit(Collision col) {
+		touchingOtherObject = false;
+		
+		print ("Exit colliding with " + col.transform.name);
+	}
 
 
 }
