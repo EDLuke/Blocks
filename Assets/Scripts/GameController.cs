@@ -8,17 +8,17 @@ public class GameController : MonoBehaviour {
 
     public Shader silhouette;
 
-    public static bool objectDrag = false;
+    public static bool objectDrag = false; //Static variable mainly used to tell camera that now movement will be used on objects
 
     private class TouchInstance{
-        private ArrayList fingerIds;
-        private int lastFingerId;
-        private Transform transform;
-        private Vector3 position;
-        private Vector2 touchPosition;
-        private Transform closest;
-		private Quaternion originalRotation;
-		private float originalHeight;
+        private ArrayList fingerIds; //if multiple fingers are touching the same object, we count as one instance
+        private int lastFingerId; //if multiple fingers are touching the same object, only the last one will be used for stacking
+        private Transform transform; //the transform of the gameobject touched
+        private Vector3 position; //the initial position of the gameobject
+        private Vector2 touchPosition; //the initial touch position of the gameobject when touched
+        private Transform closest; //the closest tranform to the touched gameobject
+		private Quaternion originalRotation; //the initial rotation of the gameobject when touched
+		private float originalHeight; //the initial height of the gameobject when touched
 
 		public TouchInstance(int initialId, Transform transform, Transform closest, Vector3 initialPosition, Vector2 touchPosition) {
             fingerIds = new ArrayList();
@@ -84,8 +84,9 @@ public class GameController : MonoBehaviour {
             return fingerIds.Count;
         }
 
+
+		//return the distance to the topmost object stacked on top of the closest gameobject
         public Vector2 GetDistance() {
-            //Vector3 distance = (closest.position - transform.position);
 			Vector3 distance = (closest.gameObject.GetComponent<PlayerController>().TopTransform().position - transform.position);
             return new Vector2(distance.x, distance.z);
         }
@@ -140,13 +141,10 @@ public class GameController : MonoBehaviour {
 		
         foreach (TouchInstance instance in touchInstances) {
             if (instance.ContainsId(touch.fingerId)) {
-				//print(touch.deltaPosition.magnitude);
-				//print (touch.deltaTime);
                 objectDrag = true;
                 Transform tf = instance.GetTransform();
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
 
-				print (tf.position);
 				rb.mass = 10;
 				rb.freezeRotation = true;
                 Vector3 previousPos = tf.position;
@@ -267,20 +265,7 @@ public class GameController : MonoBehaviour {
 				tf.rotation = closest.rotation;
 			}
 		}
-		/*else if(touch.tapCount == 3){
-			if(tf.rotation == closest.rotation){
-				tf.RotateAround(tf.position, Vector3.right, 90);
-			}
-			else{
-				tf.rotation = closest.rotation;
-			}	
-		}*/
 	}
-
-    public void Reset() {
-        Application.LoadLevel(0);
-        touchInstances = new ArrayList();
-    }
 
     Transform FindClosestCube(Transform tf) {
         GameObject[] gameObjectGroup = GameObject.FindGameObjectsWithTag("3DCube");
@@ -298,10 +283,11 @@ public class GameController : MonoBehaviour {
             }
         }
 
-		//print (closest.name);
+		//if no closeest object if found, the closest is itself
         return (gameObjectGroup.Length <= 2) ? tf : closest.GetComponent<Transform>();
     }
 
+	//When moving the objects, change all objects to another layer so raycast hits the plane
     private void IgnoreLayer() {
         GameObject[] cubes = GameObject.FindGameObjectsWithTag("3DCube");
         foreach (GameObject cube in cubes) {
@@ -314,6 +300,7 @@ public class GameController : MonoBehaviour {
 		}
     }
 
+	//Resets the object layers so touch can register with objects
     private void ResetLayer() {
         GameObject[] cubes = GameObject.FindGameObjectsWithTag("3DCube");
         foreach (GameObject cube in cubes) {

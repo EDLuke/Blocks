@@ -272,6 +272,7 @@ public class UIController : MonoBehaviour {
 
 	private void DisableObjectShowing(){
 		if (createdObject != null && createdObject.name != "New Game Object") {
+			//For some reason procedurally created objects can never be destroyed, thus we can only destory it's renderer and collider
 			createdObject.GetComponent<Renderer> ().enabled = false;
 			createdObject.GetComponent<Collider> ().enabled = false;
 			Destroy(createdObject.GetComponent<MeshFilter>().mesh);
@@ -279,7 +280,6 @@ public class UIController : MonoBehaviour {
 			Destroy(createdObject.GetComponent<Renderer>().material);
 			Destroy(createdObject.GetComponent<AudioSource>());
 			Destroy(createdObject.GetComponent<NewPlayerController>());
-			//Destroy (createdObject);
 		}
 
 		btnConfirm.gameObject.SetActive(false);

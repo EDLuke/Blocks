@@ -23,10 +23,7 @@ public class NewPlayerController : MonoBehaviour {
 	void CreateAura(){
 		GameObject aura = gameObject;
 		aura.transform.position = transform.position;
-
-		
 		GameObject auraCreated = Instantiate (aura, aura.transform.position, Quaternion.identity) as GameObject;
-		//auraCreated.GetComponent<Renderer> ().material.color = Color.red;	
 		auraCreated.GetComponent<MeshRenderer> ().enabled = false;
 		Renderer shade = auraCreated.GetComponent<Renderer>();
 		shade.material.shader = silhouette;
@@ -36,7 +33,6 @@ public class NewPlayerController : MonoBehaviour {
 		auraCreated.GetComponent<AuraController> ().parent = gameObject;
 		auraCreated.tag = "Aura";
 		Destroy (auraCreated.GetComponent<NewPlayerController> ());
-		//Destroy (auraCreated.GetComponent<Collider> ());
 		auraCreated.layer = LayerMask.NameToLayer( "AuraLayer" );
 	}
 }
