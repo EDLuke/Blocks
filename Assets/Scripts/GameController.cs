@@ -85,7 +85,8 @@ public class GameController : MonoBehaviour {
         }
 
         public Vector2 GetDistance() {
-            Vector3 distance = (closest.position - transform.position);
+            //Vector3 distance = (closest.position - transform.position);
+			Vector3 distance = (closest.gameObject.GetComponent<PlayerController>().TopTransform().position - transform.position);
             return new Vector2(distance.x, distance.z);
         }
     }
@@ -251,20 +252,29 @@ public class GameController : MonoBehaviour {
 	private void TapRotate(Touch touch, Transform tf, Transform closest){
 		if(touch.tapCount == 2){
 			if(tf.rotation == closest.rotation){
-				tf.RotateAround(tf.position, Vector3.up, 90);
+				//tf.RotateAround(tf.position, Vector3.up, 90);
+				if(tf.name.Contains("Cone")){
+					tf.rotation = Quaternion.Euler (0, 23.17876f, 0);
+				}
+				else if(tf.name.Contains("TriangleScalene")){
+					tf.rotation = Quaternion.Euler (-0.00003051758f, -121.3617f, 120.9408f);
+				}
+				else{
+					tf.rotation = Quaternion.identity;
+				}
 			}
 			else{
 				tf.rotation = closest.rotation;
 			}
 		}
-		else if(touch.tapCount == 3){
+		/*else if(touch.tapCount == 3){
 			if(tf.rotation == closest.rotation){
 				tf.RotateAround(tf.position, Vector3.right, 90);
 			}
 			else{
 				tf.rotation = closest.rotation;
 			}	
-		}
+		}*/
 	}
 
     public void Reset() {
