@@ -16,18 +16,8 @@ public class AuraController : MonoBehaviour {
 			transform.rotation = parent.transform.rotation;
 		} else {
 			Destroy(gameObject);
+			return;
 		}
-
-		//If parent is not newly created and parent is not destoryed, enable the mesh to show the red silhoutte
-		if (parent.GetComponent<PlayerController>() != null && parent.GetComponent<PlayerController>().created) {
-			if (!WithinBounds()) {
-				GetComponent<MeshRenderer>().enabled = true;
-				
-			}
-			else {
-				GetComponent<MeshRenderer>().enabled = false;
-			}
-		}  
 	}
 
 	public GameObject Parent {
@@ -36,8 +26,5 @@ public class AuraController : MonoBehaviour {
 		}
 	}
 
-	//Check if the parent position is on top of the table
-	private bool WithinBounds(){
-        return (Mathf.Abs(parent.transform.position.x) <= 15 && Mathf.Abs(parent.transform.position.z) <= 15);
-	}
+
 }

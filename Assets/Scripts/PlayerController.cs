@@ -10,8 +10,10 @@ public class PlayerController : MonoBehaviour {
 	public Rigidbody rb;
 	public static bool objectDrag = false;
     public AudioSource aud;
-	public bool created;
 	public bool touchingOtherObject;
+
+	public static Shader silhouette;
+	public static Shader standard;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +21,6 @@ public class PlayerController : MonoBehaviour {
 		topTransform = null;
 		rb = GetComponent<Rigidbody>();
         aud = GetComponent<AudioSource>();
-		created = false;
 	}
 
 
@@ -31,7 +32,17 @@ public class PlayerController : MonoBehaviour {
 			} else {
 				gameObject.SetActive (false);
 			}
-		}        
+		}   
+
+		//Change shader to re silhouetter if out of bounds
+		Renderer shade = GetComponent<Renderer>();
+		if (!WithinBounds()) {
+			shade.material.shader = silhouette;		
+		}
+		else {
+			shade.material.shader = standard;		
+		}
+
     }
 
     void OnCollisionEnter(Collision col) {
@@ -53,14 +64,22 @@ public class PlayerController : MonoBehaviour {
 		touchingOtherObject = false;
 
 		//If topTransform is no longer touching this object then assign topTransform to null
-		if (Mathf.Abs (topTransform.position.y - (transform.position.y + transform.lossyScale.y / 2)) > collisionTolerance) {
-			topTransform = null;
+		if (topTransform != null) {
+			if (Mathf.Abs (topTransform.position.y - (transform.position.y + transform.lossyScale.y / 2)) > collisionTolerance) {
+				topTransform = null;
+			}
 		}
+
 	}
 
 	public Transform TopTransform(){ //Get the object that is stacked at the top
 		//if there is not topTransform, return the current transform, otherwise use recursion to get the top-most transform
 		return (topTransform == null) ? transform : topTransform.gameObject.GetComponent<PlayerController> ().TopTransform ();
+	}
+
+	//Check if the position is on top of the table
+	private bool WithinBounds(){
+		return (Mathf.Abs(transform.position.x) <= 15 && Mathf.Abs(transform.position.z) <= 15);
 	}
 
 

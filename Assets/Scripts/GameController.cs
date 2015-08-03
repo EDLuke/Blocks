@@ -6,7 +6,8 @@ public class GameController : MonoBehaviour {
     private ArrayList touchInstances;
     Vector2 maxXZ = new Vector2(Screen.width * 1f, Screen.height * 1f);
 
-    public Shader silhouette;
+    public Shader silhouetteShader;
+	private Shader standardShader;
 
     public static bool objectDrag = false; //Static variable mainly used to tell camera that now movement will be used on objects
 
@@ -95,7 +96,11 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         touchInstances = new ArrayList();
-		NewPlayerController.silhouette = silhouette;
+
+		standardShader = Shader.Find ("Standard");
+		print (standardShader);
+		PlayerController.silhouette = silhouetteShader;
+		PlayerController.standard = standardShader;
 	}
 	
 	// Update is called once per frame

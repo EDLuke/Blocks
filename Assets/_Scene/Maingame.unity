@@ -1188,7 +1188,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!23 &364643866
 MeshRenderer:
@@ -1516,7 +1515,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!82 &414376328
 AudioSource:
@@ -2525,7 +2523,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!82 &673581253
 AudioSource:
@@ -2765,7 +2762,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!54 &705823599
 Rigidbody:
@@ -3210,7 +3206,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!23 &950522133
 MeshRenderer:
@@ -3388,7 +3383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0feac68fd191bc645a8b5b92b71ae237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  silhouette: {fileID: 4800000, guid: 0dffe642c7172f0498ed1fa4f62d66f3, type: 3}
+  silhouetteShader: {fileID: 4800000, guid: 0dffe642c7172f0498ed1fa4f62d66f3, type: 3}
 --- !u!4 &976502992
 Transform:
   m_ObjectHideFlags: 0
@@ -4218,7 +4213,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!23 &1286293189
 MeshRenderer:
@@ -4648,7 +4642,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 1541013174}
   aud: {fileID: 1541013173}
-  created: 0
   touchingOtherObject: 0
 --- !u!114 &1541013177
 MonoBehaviour:
@@ -4865,7 +4858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!95 &1679698291
 Animator:
@@ -6101,7 +6093,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   aud: {fileID: 0}
-  created: 0
   touchingOtherObject: 0
 --- !u!54 &2143472680
 Rigidbody:

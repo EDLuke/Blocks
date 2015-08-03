@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NewPlayerController : MonoBehaviour {
 	public static Vector3 onScreenPosition;
-    public static Shader silhouette;
+
 	private const float auraScale = 1.5f;
 
 
@@ -25,8 +25,6 @@ public class NewPlayerController : MonoBehaviour {
 		aura.transform.position = transform.position;
 		GameObject auraCreated = Instantiate (aura, aura.transform.position, Quaternion.identity) as GameObject;
 		auraCreated.GetComponent<MeshRenderer> ().enabled = false;
-		Renderer shade = auraCreated.GetComponent<Renderer>();
-		shade.material.shader = silhouette;
 		auraCreated.GetComponent<Collider> ().enabled = true;
 		auraCreated.transform.localScale = auraCreated.transform.localScale * auraScale;
 		auraCreated.AddComponent<AuraController> ();
