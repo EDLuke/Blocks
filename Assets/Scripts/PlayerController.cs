@@ -56,8 +56,11 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		//Play Audio
-        aud.volume = rb.velocity.magnitude;
-        aud.Play();
+		if (rb != null) {
+			aud.volume = rb.velocity.magnitude;
+			aud.Play();
+		}
+        
     }
 
 	void OnCollisionExit(Collision col) {

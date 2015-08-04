@@ -73,6 +73,7 @@ public class UIController : MonoBehaviour {
 			Destroy(createdObject.GetComponent<NewPlayerController>()); //detach NewPlayerController
 			createdObject.transform.rotation = Quaternion.identity; //reset rotation
 			createdObject.GetComponent<Collider> ().enabled = true;	
+			createdObject.tag = "3DCube";
 			createdObject = new GameObject ();
 			
 			btnConfirm.gameObject.SetActive (false);
@@ -256,6 +257,7 @@ public class UIController : MonoBehaviour {
 		}	
 
 		createdObject = Instantiate(creation, Camera.main.ScreenToWorldPoint(displayPositionOnScreen), Quaternion.identity) as GameObject;
+		Destroy (createdObject.GetComponent<PlayerController> ());
 		createdObject.GetComponent<Renderer> ().material = creation.GetComponent<Renderer> ().material;
 		createdObject.GetComponent<Renderer> ().material.color = color;
 		createdObject.GetComponent<Renderer>().enabled = true;
@@ -264,7 +266,7 @@ public class UIController : MonoBehaviour {
 		createdObject.GetComponent<Rigidbody> ().useGravity = false;
 		createdObject.GetComponent<Collider> ().enabled = false;
 		createdObject.AddComponent <NewPlayerController>();
-		Destroy (createdObject.GetComponent<PlayerController> ());
+		createdObject.tag = "NewCube";
 		createdObject.SetActive (true);
 		btnConfirm.gameObject.SetActive (true);
 	}

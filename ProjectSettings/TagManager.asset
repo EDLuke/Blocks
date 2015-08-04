@@ -8,6 +8,7 @@ TagManager:
   - 3DCube
   - Aura
   - Background
+  - NewCube
   layers:
   - Default
   - TransparentFX

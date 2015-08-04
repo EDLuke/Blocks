@@ -147,6 +147,9 @@ public class GameController : MonoBehaviour {
             if (instance.ContainsId(touch.fingerId)) {
                 objectDrag = true;
                 Transform tf = instance.GetTransform();
+				if(tf == null){
+					continue;
+				}
                 Rigidbody rb = tf.GetComponent<Rigidbody>();
 
 				rb.mass = 10;
@@ -233,7 +236,7 @@ public class GameController : MonoBehaviour {
         Ray ray = Camera.main.ScreenPointToRay(touch.position);
         RaycastHit hit;
 
-		if (Physics.Raycast(ray, out hit) && hit.transform.tag != "Plane" && hit.transform.tag != "Background") {
+		if (Physics.Raycast(ray, out hit) && hit.transform.tag == "Aura" && hit.transform.gameObject.GetComponent<AuraController>().Parent.tag == "3DCube") {
             objectDrag = true;
             Transform tf = hit.transform.gameObject.GetComponent<AuraController>().Parent.transform;
             bool instanceExists = false;
