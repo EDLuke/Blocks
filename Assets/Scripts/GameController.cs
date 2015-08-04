@@ -98,7 +98,6 @@ public class GameController : MonoBehaviour {
         touchInstances = new ArrayList();
 
 		standardShader = Shader.Find ("Standard");
-		print (standardShader);
 		PlayerController.silhouette = silhouetteShader;
 		PlayerController.standard = standardShader;
 	}
@@ -159,6 +158,7 @@ public class GameController : MonoBehaviour {
 					IgnoreLayer();
 					if(touch.deltaPosition.magnitude >= 20){ //nudges
 						if (Physics.Raycast(rayMove, out hitMove)) {
+
 							currentPos = hitMove.point;
 							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
 						}
@@ -173,7 +173,11 @@ public class GameController : MonoBehaviour {
 					}
 					else{	//Free Moving 2D
 						if (Physics.Raycast(rayMove, out hitMove)) {
+							Vector3 slope = rayMove.direction * -1;
 							currentPos = hitMove.point;
+							currentPos.x += slope.x * (instance.GetHeight() / slope.y);
+							currentPos.z += slope.z * (instance.GetHeight() / slope.y);
+							
 							currentPos.y = instance.GetHeight(); //change Y to be the current height so when objects are stacked bottom ones won't be touched        	
 						}
 
