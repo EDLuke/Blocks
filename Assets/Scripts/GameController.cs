@@ -105,11 +105,12 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         foreach (Touch touch in Input.touches) {     
+			print (touch.fingerId + "\t" + touch.phase);
             switch (touch.phase) {
                 case TouchPhase.Began:
                     TouchBegan(touch);
                     break;
-
+				case TouchPhase.Stationary:
                 case TouchPhase.Moved:
                     TouchMoved(touch);
                     break;
