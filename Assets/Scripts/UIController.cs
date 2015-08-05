@@ -48,6 +48,9 @@ public class UIController : MonoBehaviour {
 	//Smiley face button used for confirmation
 	public Button btnConfirm;
 
+	//Oops button
+	public Button btnBackState;
+
 	//Storing infomation for the created object (floating with UI)
 	private GameObject createdObject;
 
@@ -73,6 +76,7 @@ public class UIController : MonoBehaviour {
 			Destroy(createdObject.GetComponent<NewPlayerController>()); //detach NewPlayerController
 			createdObject.transform.rotation = Quaternion.identity; //reset rotation
 			createdObject.GetComponent<Collider> ().enabled = true;	
+			createdObject.name += createdObject.GetInstanceID();
 			createdObject.tag = "3DCube";
 			createdObject = new GameObject ();
 			
@@ -81,6 +85,10 @@ public class UIController : MonoBehaviour {
 			//De-active the panels and buttons
 			DisableUI();
 		});
+		btnBackState.onClick.AddListener (delegate {
+			StateController.Pop();
+		});
+
 
 		Vector3 btnConfirmPosition = displayPositionOnScreen;
 		btnConfirmPosition.y -= 6;

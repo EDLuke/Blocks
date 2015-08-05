@@ -5,6 +5,8 @@ public class GameController : MonoBehaviour {
 	private const float nudgeForce = 1.5f;
     private ArrayList touchInstances;
     Vector2 maxXZ = new Vector2(Screen.width * 1f, Screen.height * 1f);
+	private bool noTouches = false;
+
 
     public Shader silhouetteShader;
 	private Shader standardShader;
@@ -105,7 +107,6 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         foreach (Touch touch in Input.touches) {     
-			print (touch.fingerId + "\t" + touch.phase);
             switch (touch.phase) {
                 case TouchPhase.Began:
                     TouchBegan(touch);
@@ -120,6 +121,25 @@ public class GameController : MonoBehaviour {
                     break;
             }
         }
+
+		VelocityListener ();
+	}
+
+	void VelocityListener ()
+	{
+		if (noTouches) {
+			bool allVelocityZero = true;
+			foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag ("3DCube")) {
+				if (gameObject.GetComponent<Rigidbody> ().velocity.magnitude != 0) {
+					allVelocityZero = false;
+				}
+			}
+			if (allVelocityZero) {
+				//If the velocity for all objects are zero, record the state and stop the listener
+				StateController.Push ();
+				noTouches = false;
+			}
+		}
 	}
 
     private void TouchEnded(Touch touch) {
@@ -137,6 +157,9 @@ public class GameController : MonoBehaviour {
         }
 
         touchInstances = newList;
+		if (touchInstances.Count == 0 && objectDrag) { //If no more touches, start the listener for all object's velocity
+			noTouches = true;
+		}
         objectDrag = false;
     }
 

@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour {
 		else {
 			shade.material.shader = standard;		
 		}
-
     }
 
     void OnCollisionEnter(Collision col) {
@@ -84,6 +83,4 @@ public class PlayerController : MonoBehaviour {
 	private bool WithinBounds(){
 		return (Mathf.Abs(transform.position.x) <= 15 && Mathf.Abs(transform.position.z) <= 15);
 	}
-
-
 }
